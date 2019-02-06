@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import messaging.MessageBroker;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.loan.LoanReply;
 import mix.model.loan.LoanRequest;
@@ -36,11 +37,15 @@ public class LoanClientFrame extends JFrame {
 	private JLabel lblNewLabel_1;
 	private JTextField tfTime;
 
+	private MessageBroker messageBroker;
+
 	/**
 	 * Create the frame.
 	 */
 	public LoanClientFrame() {
 		setTitle("Loan Client");
+		messageBroker = MessageBroker.getInstance();
+		messageBroker.receiveMessage();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 684, 619);
@@ -113,7 +118,8 @@ public class LoanClientFrame extends JFrame {
 				int time = Integer.parseInt(tfTime.getText());				
 				
 				LoanRequest request = new LoanRequest(ssn,amount,time);
-				listModel.addElement( new RequestReply<LoanRequest,LoanReply>(request, null));	
+				listModel.addElement( new RequestReply<LoanRequest,LoanReply>(request, null));
+				messageBroker.sendMessage(new RequestReply(request, null));
 				// to do:  send the JMS with request to Loan Broker
 			}
 		});
@@ -156,16 +162,14 @@ public class LoanClientFrame extends JFrame {
    }
 	
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoanClientFrame frame = new LoanClientFrame();
-					
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            try {
+                LoanClientFrame frame = new LoanClientFrame();
+
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 	}
 }

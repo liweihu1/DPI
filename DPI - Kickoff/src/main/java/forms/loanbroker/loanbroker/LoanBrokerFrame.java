@@ -1,5 +1,7 @@
 package forms.loanbroker.loanbroker;
 
+import messaging.CustomMessageListener;
+import messaging.MessageBroker;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
 import mix.model.loan.LoanRequest;
@@ -9,6 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.jms.MessageListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -17,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 
-public class LoanBrokerFrame extends JFrame {
+public class LoanBrokerFrame extends JFrame{
 
 	/**
 	 * 
@@ -26,16 +29,15 @@ public class LoanBrokerFrame extends JFrame {
 	private JPanel contentPane;
 	private DefaultListModel<JListLine> listModel = new DefaultListModel<JListLine>();
 	private JList<JListLine> list;
+	private MessageBroker messageBroker;
 	
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoanBrokerFrame frame = new LoanBrokerFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				LoanBrokerFrame frame = new LoanBrokerFrame();
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -45,6 +47,7 @@ public class LoanBrokerFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public LoanBrokerFrame() {
+		messageBroker = MessageBroker.getInstance();
 		setTitle("Loan Broker");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -103,6 +106,4 @@ public class LoanBrokerFrame extends JFrame {
             list.repaint();
 		}		
 	}
-
-
 }

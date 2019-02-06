@@ -17,9 +17,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import messaging.MessageBroker;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
+import sun.plugin2.message.Message;
 
 public class JMSBankFrame extends JFrame {
 
@@ -30,6 +32,7 @@ public class JMSBankFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField tfReply;
 	private DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>> listModel = new DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>>();
+	private MessageBroker messageBroker;
 	
 	/**
 	 * Launch the application.
@@ -51,6 +54,7 @@ public class JMSBankFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public JMSBankFrame() {
+	    messageBroker = MessageBroker.getInstance();
 		setTitle("JMS Bank - ABN AMRO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -103,6 +107,7 @@ public class JMSBankFrame extends JFrame {
 				if (rr!= null && reply != null){
 					rr.setReply(reply);
 	                list.repaint();
+					messageBroker.sendMessage(rr);
 					// todo: sent JMS message with the reply to Loan Broker
 				}
 			}
