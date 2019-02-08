@@ -38,8 +38,6 @@ public class JMSBankFrameController extends Application implements MessageListen
 
     private Scene scene;
 
-    private ObservableList<RequestReply> itemList;
-
     public JMSBankFrameController() {
         try {
             Properties props = new Properties();
@@ -87,24 +85,28 @@ public class JMSBankFrameController extends Application implements MessageListen
 
     @Override
     public void onMessage(Message message) {
-        Platform.runLater(() -> {
-            try {
-                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REQUEST)) {
-                    BankInterestRequest request = new BankInterestRequest();
-                    request.setSsn(message.getIntProperty(Constants.SSN));
-                    request.setAmount(message.getIntProperty(Constants.AMOUNT));
-                    request.setTime(message.getIntProperty(Constants.TIME));
-                    RequestReply requestReply = new RequestReply(request, null);
-                    addMessageToList(requestReply);
-                }
-            } catch (JMSException e) {
-                e.printStackTrace();
+        try {
+            if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REQUEST)) {
+                BankInterestRequest request = new BankInterestRequest();
+                request.setSsn(message.getIntProperty(Constants.SSN));
+                request.setAmount(message.getIntProperty(Constants.AMOUNT));
+                request.setTime(message.getIntProperty(Constants.TIME));
+                RequestReply requestReply = new RequestReply(request, null);
+                addMessageToList(requestReply);
             }
-        });
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addMessageToList(RequestReply request){
-        itemList.add(request);
+        if (request != null){
+            Platform.runLater(() -> {
+                if (lvRequestReply != null) {
+                    lvRequestReply.getItems().add(request);
+                }
+            });
+        }
     }
 
     public boolean checkText(String text){

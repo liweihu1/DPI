@@ -113,7 +113,11 @@ public class LoanClientFrameController extends Application implements MessageLis
     }
 
     public void addItemToListView(RequestReply requestReply){
-        Platform.runLater(() -> lvRequestReply.getItems().add(requestReply));
+        Platform.runLater(() -> {
+            if (lvRequestReply != null){
+                lvRequestReply.getItems().add(requestReply);
+            }
+        });
     }
 
     public boolean checkFields(){

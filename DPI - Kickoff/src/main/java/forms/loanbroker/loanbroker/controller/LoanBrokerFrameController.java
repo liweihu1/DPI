@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import messaging.MessageBroker;
 import mix.messaging.requestreply.RequestReply;
+import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
 import mix.model.loan.LoanReply;
 import utilities.Constants;
@@ -72,42 +73,43 @@ public class LoanBrokerFrameController extends Application implements MessageLis
 
     @Override
     public void onMessage(Message message) {
+        try {
+            if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REPLY)) {
+                LoanReply reply = new LoanReply();
+                reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
+                reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
+                reply.setSsn(Integer.parseInt(message.getJMSCorrelationID()));
+                broker.sendMessage(new RequestReply(null, reply), Constants.LOAN_REPLY);
+                updateUi(reply, message.getJMSCorrelationID());
+            } else {
+                BankInterestRequest request = new BankInterestRequest();
+                request.setSsn(Integer.parseInt(message.getJMSCorrelationID()));
+                request.setAmount(message.getIntProperty(Constants.AMOUNT));
+                request.setTime(message.getIntProperty(Constants.TIME));
+                RequestReply requestReply = new RequestReply(request, null);
+                broker.sendMessage(requestReply, Constants.BANK_INTEREST_REQUEST);
+                addRequestToList(requestReply);
+            }
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUi(LoanReply reply, String correlationId){
         Platform.runLater(() -> {
-            try {
-                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REPLY)) {
-                    LoanReply reply = new LoanReply();
-                    reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
-                    reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
-                    reply.setSsn(Integer.parseInt(message.getJMSCorrelationID()));
-                    RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> {
-                        try {
-                            return Integer.parseInt(message.getJMSCorrelationID()) == (((BankInterestRequest)rr.getRequest()).getSsn());
-                        } catch (JMSException e) {
-                            e.printStackTrace();
-                            return false;
-                        }
-                    }).findAny().orElse(null);
-                    if (receivingRR != null) {
-                        receivingRR.setReply(reply);
-                        lvRequestReply.refresh();
-                    }
-                    broker.sendMessage(new RequestReply(null, reply), Constants.LOAN_REPLY);
-                } else {
-                    BankInterestRequest request = new BankInterestRequest();
-                    request.setSsn(Integer.parseInt(message.getJMSCorrelationID()));
-                    request.setAmount(message.getIntProperty(Constants.AMOUNT));
-                    request.setTime(message.getIntProperty(Constants.TIME));
-                    RequestReply requestReply = new RequestReply(request, null);
-                    broker.sendMessage(requestReply, Constants.BANK_INTEREST_REQUEST);
-//                    addRequestToList(requestReply);
-                }
-            } catch (JMSException e) {
-                e.printStackTrace();
+            RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> Integer.parseInt(correlationId) == (((BankInterestRequest)rr.getRequest()).getSsn())).findAny().orElse(null);
+            if (receivingRR != null) {
+                receivingRR.setReply(reply);
+                lvRequestReply.refresh();
             }
         });
     }
 
     public void addRequestToList(RequestReply request) {
-        this.lvRequestReply.getItems().add(request);
+        if (request != null) {
+            if (this.lvRequestReply != null){
+                Platform.runLater(() -> this.lvRequestReply.getItems().add(request));
+            }
+        }
     }
 }
