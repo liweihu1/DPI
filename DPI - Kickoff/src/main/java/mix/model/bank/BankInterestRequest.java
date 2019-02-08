@@ -9,19 +9,28 @@ import java.io.Serializable;
  */
 public class BankInterestRequest implements Serializable {
 
+    private int ssn;
     private int amount; // the requested loan amount
     private int time; // the requested loan period
 
     public BankInterestRequest() {
         super();
+        this.ssn = 0;
         this.amount = 0;
         this.time = 0;
     }
 
-    public BankInterestRequest(int amount, int time) {
+    public BankInterestRequest(int ssn, int amount, int time) {
         super();
+        this.ssn = ssn;
         this.amount = amount;
         this.time = time;
+    }
+
+    public int getSsn() { return ssn; }
+
+    public void setSsn(int ssn) {
+        this.ssn = ssn;
     }
 
     public int getAmount() {

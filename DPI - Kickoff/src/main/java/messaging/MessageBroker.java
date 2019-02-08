@@ -1,19 +1,17 @@
 package messaging;
 
-import jdk.nashorn.internal.runtime.JSONFunctions;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
 import mix.model.loan.LoanReply;
 import mix.model.loan.LoanRequest;
+import utilities.Constants;
 
 import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.io.Serializable;
 import java.util.Properties;
-import java.util.UUID;
 
 public final class MessageBroker {
     private static MessageBroker messageBroker;
@@ -21,29 +19,25 @@ public final class MessageBroker {
     private Connection connection; // to connect to the JMS
     private Session session; // session for creating consumers
 
-    private Destination receiveDestination; //reference to a queue/topic destination
-    private Destination sendDestination;
     private Properties props;
 
     private Context jndiContext;
 
-    public MessageBroker(String queueName) {
+    public MessageBroker() {
         try {
             props = new Properties();
             props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
             props.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
+            props.put((Constants.BANK_INTEREST_REQUEST_QUEUE), Constants.BANK_INTEREST_REQUEST);
+            props.put((Constants.BANK_INTEREST_REPLY_QUEUE), Constants.BANK_INTEREST_REPLY);
+            props.put((Constants.LOAN_REPLY_QUEUE), Constants.LOAN_REPLY);
+            props.put((Constants.LOAN_REQUEST_QUEUE), Constants.LOAN_REQUEST);
 
             jndiContext = new InitialContext(props);
             ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup("ConnectionFactory");
 
             connection = connectionFactory.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            session.createQueue(queueName);
-
-            // connect to the receiver destination
-            receiveDestination = (Destination) jndiContext.lookup("DankBank");
-            // connect to the sender destination
-            sendDestination = (Destination) jndiContext.lookup("DankBank");
 
             connection.start(); // this is needed to start receiving messages
         } catch (NamingException | JMSException e) {
@@ -51,69 +45,43 @@ public final class MessageBroker {
         }
     }
 
-    public void sendMessage(RequestReply rr) {
+    public void sendMessage(RequestReply rr, String destination) {
         try {
-            MessageProducer producer = session.createProducer(sendDestination);
-            // create a text message
-            Message msg = convertRequestReplyToMessage(rr);
-            // send the message
-            producer.send(msg);
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void receiveMessage() {
-        try {
-            MessageConsumer consumer = session.createConsumer(receiveDestination);
-            consumer.setMessageListener(new CustomMessageListener());
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Message convertRequestReplyToMessage(RequestReply reply) {
-        try {
-            if (reply.getRequest() != null) {
-                Message message = session.createMessage();
-                if (reply.getRequest() instanceof LoanRequest) {
-                    message.setStringProperty("type", "LOAN");
-                    message.setIntProperty("ssn", ((LoanRequest)reply.getRequest()).getSsn());
-                    message.setIntProperty("amount", ((LoanRequest)reply.getRequest()).getAmount());
-                    message.setIntProperty("time", ((LoanRequest)reply.getRequest()).getTime());
-                    message.setJMSReplyTo(sendDestination);
-                } else {
-                    message.setStringProperty("type", "BANK");
-                    message.setIntProperty("amount", ((BankInterestRequest)reply.getRequest()).getAmount());
-                    message.setIntProperty("time", ((BankInterestRequest)reply.getRequest()).getTime());
-
-                }
-                return message;
-            }
-            return null;
-        } catch (JMSException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public RequestReply convertMessageToRequestReply(Message message){
-        try {
-            if (message.getStringProperty("type").contains("BANK")) {
-
+            Destination sendDestination = (Destination) jndiContext.lookup(destination);
+            Message message = session.createMessage();
+            if (destination == Constants.LOAN_REQUEST) {
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_LOAN);
+                message.setJMSCorrelationID(String.valueOf((((LoanRequest)rr.getRequest()).getSsn())));
+                message.setIntProperty(Constants.SSN, (((LoanRequest)rr.getRequest()).getSsn()));
+                message.setIntProperty(Constants.TIME, (((LoanRequest)rr.getRequest()).getTime()));
+                message.setIntProperty(Constants.AMOUNT, (((LoanRequest)rr.getRequest()).getAmount()));
+            } else if (destination == Constants.BANK_INTEREST_REQUEST){
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_BANK);
+                message.setJMSCorrelationID(String.valueOf((((BankInterestRequest)rr.getRequest()).getSsn())));
+                message.setIntProperty(Constants.SSN, (((BankInterestRequest)rr.getRequest()).getSsn()));
+                message.setIntProperty(Constants.AMOUNT, (((BankInterestRequest)rr.getRequest()).getAmount()));
+                message.setIntProperty(Constants.TIME, (((BankInterestRequest)rr.getRequest()).getTime()));
+            } else if (destination == Constants.BANK_INTEREST_REPLY){
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_BANK_REPLY);
+                message.setJMSCorrelationID(message.getJMSMessageID());
+                message.setDoubleProperty(Constants.INTEREST, (((BankInterestReply)rr.getReply()).getInterest()));
+                message.setStringProperty(Constants.BANK_NAME, (((BankInterestReply)rr.getReply()).getQuoteId()));
             } else {
-
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_LOAN_REPLY);
+                message.setJMSCorrelationID(message.getJMSMessageID());
+                message.setDoubleProperty(Constants.INTEREST, (((LoanReply)rr.getReply()).getInterest()));
+                message.setStringProperty(Constants.BANK_NAME, (((LoanReply)rr.getReply()).getQuoteID()));
             }
-            return null;
-        } catch (JMSException e) {
+            MessageProducer producer = session.createProducer(sendDestination);
+            producer.send(message);
+        } catch (NamingException | JMSException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
-    public static MessageBroker getInstance(String queueName){
+    public static MessageBroker getInstance(){
         if (messageBroker == null) {
-            messageBroker = new MessageBroker(queueName);
+            messageBroker = new MessageBroker();
         }
         return messageBroker;
     }

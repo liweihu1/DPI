@@ -9,18 +9,30 @@ import java.io.Serializable;
  */
 public class LoanReply implements Serializable {
 
+        private int ssn;
         private double interest; // the interest that the bank offers
         private String bankID; // the unique quote identification
 
     public LoanReply() {
         super();
+        this.ssn = 0;
         this.interest = 0;
         this.bankID = "";
     }
-    public LoanReply(double interest, String quoteID) {
+
+    public LoanReply(int ssn, double interest, String quoteID) {
         super();
+        this.ssn = ssn;
         this.interest = interest;
         this.bankID = quoteID;
+    }
+
+    public int getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(int ssn) {
+        this.ssn = ssn;
     }
 
     public double getInterest() {
@@ -43,4 +55,5 @@ public class LoanReply implements Serializable {
     public String toString(){
         return " interest="+String.valueOf(interest) + " quoteID="+String.valueOf(bankID);
     }
+
 }
