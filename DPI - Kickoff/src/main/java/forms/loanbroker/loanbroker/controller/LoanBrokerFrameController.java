@@ -107,9 +107,12 @@ public class LoanBrokerFrameController extends Application implements MessageLis
 
     public void addRequestToList(RequestReply request) {
         if (request != null) {
-            if (this.lvRequestReply != null){
-                Platform.runLater(() -> this.lvRequestReply.getItems().add(request));
-            }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    lvRequestReply.getItems().add(request);
+                }
+            });
         }
     }
 }

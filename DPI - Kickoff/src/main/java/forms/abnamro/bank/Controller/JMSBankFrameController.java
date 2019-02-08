@@ -101,8 +101,9 @@ public class JMSBankFrameController extends Application implements MessageListen
 
     public void addMessageToList(RequestReply request){
         if (request != null){
-            Platform.runLater(() -> {
-                if (lvRequestReply != null) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
                     lvRequestReply.getItems().add(request);
                 }
             });

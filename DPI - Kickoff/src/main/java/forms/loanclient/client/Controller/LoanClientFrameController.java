@@ -74,29 +74,16 @@ public class LoanClientFrameController extends Application implements MessageLis
 
     @Override
     public void onMessage(Message message) {
-        Platform.runLater(() -> {
-            try {
-                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.LOAN_REPLY)) {
-                    RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> {
-                        try {
-                            return Integer.parseInt(message.getJMSCorrelationID()) == (((LoanRequest)rr.getRequest()).getSsn());
-                        } catch (JMSException e) {
-                            e.printStackTrace();
-                            return false;
-                        }
-                    }).findAny().orElse(null);
-                    if (receivingRR != null) {
-                        LoanReply reply = new LoanReply();
-                        reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
-                        reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
-                        receivingRR.setReply(reply);
-                        lvRequestReply.refresh();
-                    }
-                }
-            } catch (JMSException e) {
-                e.printStackTrace();
+        try {
+            if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.LOAN_REPLY)) {
+                LoanReply reply = new LoanReply();
+                reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
+                reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
+                updateRequestReply(reply, Integer.parseInt(message.getJMSCorrelationID()));
             }
-        });
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -116,6 +103,19 @@ public class LoanClientFrameController extends Application implements MessageLis
         Platform.runLater(() -> {
             if (lvRequestReply != null){
                 lvRequestReply.getItems().add(requestReply);
+            }
+        });
+    }
+
+    public void updateRequestReply(LoanReply reply, int correlationId) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                RequestReply receivingRR = lvRequestReply.getItems().stream().filter(rr -> correlationId == (((LoanRequest) rr.getRequest()).getSsn())).findAny().orElse(null);
+                if (receivingRR != null) {
+                    receivingRR.setReply(reply);
+                    lvRequestReply.refresh();
+                }
             }
         });
     }
