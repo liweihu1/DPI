@@ -16,8 +16,8 @@
       <file leaf-file-name="LoanBrokerFrameController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanbroker/loanbroker/controller/LoanBrokerFrameController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3">
-              <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+            <state relative-caret-position="819">
+              <caret line="102" column="17" lean-forward="true" selection-start-line="102" selection-start-column="17" selection-end-line="102" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#LoanBrokerFrameController#0;class#LoanBrokerFrameController#0" />
@@ -73,8 +73,8 @@
       <file leaf-file-name="Constants.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/utilities/Constants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="23" column="60" selection-start-line="23" selection-start-column="60" selection-end-line="23" selection-end-column="60" />
+            <state relative-caret-position="265">
+              <caret line="16" column="54" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -82,11 +82,13 @@
       <file leaf-file-name="JMSBankFrameController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/forms/abnamro/bank/Controller/JMSBankFrameController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="79" column="37" selection-start-line="79" selection-start-column="37" selection-end-line="79" selection-end-column="37" />
+            <state relative-caret-position="272">
+              <caret line="67" column="98" lean-forward="true" selection-start-line="67" selection-start-column="98" selection-end-line="67" selection-end-column="98" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#JMSBankFrameController#0;class#JMSBankFrameController#0" />
+                <element signature="e#4035#4036#0" expanded="true" />
+                <element signature="e#4089#4090#0" expanded="true" />
                 <element signature="e#3869#3870#0" expanded="true" />
                 <element signature="e#3923#3924#0" expanded="true" />
               </folding>
@@ -97,12 +99,12 @@
       <file leaf-file-name="LoanClientFrameController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanclient/client/Controller/LoanClientFrameController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="78" column="101" selection-start-line="78" selection-start-column="101" selection-end-line="78" selection-end-column="101" />
+            <state relative-caret-position="289">
+              <caret line="115" column="32" selection-start-line="115" selection-start-column="32" selection-end-line="115" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#LoanClientFrameController#0;class#LoanClientFrameController#0" />
-                <element signature="method#checkFields#0;class#LoanClientFrameController#0" />
+                <element signature="method#onMessage#0;class#LoanClientFrameController#0" />
               </folding>
             </state>
           </provider>
@@ -323,6 +325,16 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mix" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="loan" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DPI - Kickoff" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DPI - Kickoff" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="utilities" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -494,12 +506,12 @@
       <workItem from="1549557056627" duration="14619000" />
       <workItem from="1549613124929" duration="155000" />
       <workItem from="1549630753807" duration="899000" />
-      <workItem from="1549639694604" duration="3278000" />
+      <workItem from="1549639694604" duration="3976000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30819000" />
+    <option name="totallyTimeSpent" value="31517000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -544,7 +556,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="82" />
+      <option name="time" value="88" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -827,13 +839,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utilities/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="23" column="60" selection-start-line="23" selection-start-column="60" selection-end-line="23" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-all/5.15.3/activemq-all-5.15.3.jar!/org/apache/activemq/ActiveMQMessageConsumer.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -873,23 +878,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/forms/abnamro/bank/Controller/JMSBankFrameController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/utilities/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="79" column="37" selection-start-line="79" selection-start-column="37" selection-end-line="79" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#JMSBankFrameController#0;class#JMSBankFrameController#0" />
-            <element signature="e#3869#3870#0" expanded="true" />
-            <element signature="e#3923#3924#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="265">
+          <caret line="16" column="54" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="54" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanbroker/loanbroker/controller/LoanBrokerFrameController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3">
-          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="819">
+          <caret line="102" column="17" lean-forward="true" selection-start-line="102" selection-start-column="17" selection-end-line="102" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#LoanBrokerFrameController#0;class#LoanBrokerFrameController#0" />
@@ -900,14 +899,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/forms/abnamro/bank/Controller/JMSBankFrameController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="67" column="98" lean-forward="true" selection-start-line="67" selection-start-column="98" selection-end-line="67" selection-end-column="98" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#JMSBankFrameController#0;class#JMSBankFrameController#0" />
+            <element signature="e#4035#4036#0" expanded="true" />
+            <element signature="e#4089#4090#0" expanded="true" />
+            <element signature="e#3869#3870#0" expanded="true" />
+            <element signature="e#3923#3924#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanclient/client/Controller/LoanClientFrameController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="78" column="101" selection-start-line="78" selection-start-column="101" selection-end-line="78" selection-end-column="101" />
+        <state relative-caret-position="289">
+          <caret line="115" column="32" selection-start-line="115" selection-start-column="32" selection-end-line="115" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#LoanClientFrameController#0;class#LoanClientFrameController#0" />
-            <element signature="method#checkFields#0;class#LoanClientFrameController#0" />
+            <element signature="method#onMessage#0;class#LoanClientFrameController#0" />
           </folding>
         </state>
       </provider>

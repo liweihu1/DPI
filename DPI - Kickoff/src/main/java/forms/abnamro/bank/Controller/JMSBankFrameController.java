@@ -2,6 +2,7 @@ package forms.abnamro.bank.Controller;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +37,8 @@ public class JMSBankFrameController extends Application implements MessageListen
     private MessageBroker broker;
 
     private Scene scene;
+
+    private ObservableList<RequestReply> itemList;
 
     public JMSBankFrameController() {
         try {
@@ -84,22 +87,24 @@ public class JMSBankFrameController extends Application implements MessageListen
 
     @Override
     public void onMessage(Message message) {
-        try {
-            if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REQUEST)) {
-                BankInterestRequest request = new BankInterestRequest();
-                request.setSsn(message.getIntProperty(Constants.SSN));
-                request.setAmount(message.getIntProperty(Constants.AMOUNT));
-                request.setTime(message.getIntProperty(Constants.TIME));
-                RequestReply requestReply = new RequestReply(request, null);
-                addMessageToList(requestReply);
+        Platform.runLater(() -> {
+            try {
+                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REQUEST)) {
+                    BankInterestRequest request = new BankInterestRequest();
+                    request.setSsn(message.getIntProperty(Constants.SSN));
+                    request.setAmount(message.getIntProperty(Constants.AMOUNT));
+                    request.setTime(message.getIntProperty(Constants.TIME));
+                    RequestReply requestReply = new RequestReply(request, null);
+                    addMessageToList(requestReply);
+                }
+            } catch (JMSException e) {
+                e.printStackTrace();
             }
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     public void addMessageToList(RequestReply request){
-        Platform.runLater(() -> lvRequestReply.getItems().add(request));
+        itemList.add(request);
     }
 
     public boolean checkText(String text){

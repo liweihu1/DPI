@@ -98,9 +98,8 @@ public class LoanBrokerFrameController extends Application implements MessageLis
                     request.setAmount(message.getIntProperty(Constants.AMOUNT));
                     request.setTime(message.getIntProperty(Constants.TIME));
                     RequestReply requestReply = new RequestReply(request, null);
-                    System.out.println(requestReply);
                     broker.sendMessage(requestReply, Constants.BANK_INTEREST_REQUEST);
-                    addRequestToList(requestReply);
+//                    addRequestToList(requestReply);
                 }
             } catch (JMSException e) {
                 e.printStackTrace();

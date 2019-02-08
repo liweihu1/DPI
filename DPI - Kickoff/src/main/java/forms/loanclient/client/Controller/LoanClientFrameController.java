@@ -113,7 +113,7 @@ public class LoanClientFrameController extends Application implements MessageLis
     }
 
     public void addItemToListView(RequestReply requestReply){
-        Platform.runLater(() -> this.lvRequestReply.getItems().add(requestReply));
+        Platform.runLater(() -> lvRequestReply.getItems().add(requestReply));
     }
 
     public boolean checkFields(){
@@ -121,6 +121,8 @@ public class LoanClientFrameController extends Application implements MessageLis
         String amount = tfAmount.getText();
         String time = tfTime.getText();
         String regex = "^\\d+(\\.\\d+)?";
-        return !ssn.isEmpty() && !amount.isEmpty() && !time.isEmpty() && ssn.matches(regex) && amount.matches(regex) && time.matches(regex);
+
+        RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> Integer.parseInt(ssn) == (((LoanRequest)rr.getRequest()).getSsn())).findAny().orElse(null);
+        return !ssn.isEmpty() && !amount.isEmpty() && !time.isEmpty() && ssn.matches(regex) && amount.matches(regex) && time.matches(regex) && receivingRR == null;
     }
 }
