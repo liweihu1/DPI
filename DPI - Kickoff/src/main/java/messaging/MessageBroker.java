@@ -49,26 +49,26 @@ public final class MessageBroker {
         try {
             Destination sendDestination = (Destination) jndiContext.lookup(destination);
             Message message = session.createMessage();
-            if (destination == Constants.LOAN_REQUEST) {
-                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_LOAN);
+            if (destination.equals(Constants.LOAN_REQUEST)) {
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.LOAN_REQUEST);
                 message.setJMSCorrelationID(String.valueOf((((LoanRequest)rr.getRequest()).getSsn())));
                 message.setIntProperty(Constants.SSN, (((LoanRequest)rr.getRequest()).getSsn()));
                 message.setIntProperty(Constants.TIME, (((LoanRequest)rr.getRequest()).getTime()));
                 message.setIntProperty(Constants.AMOUNT, (((LoanRequest)rr.getRequest()).getAmount()));
-            } else if (destination == Constants.BANK_INTEREST_REQUEST){
-                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_BANK);
+            } else if (destination.equals(Constants.BANK_INTEREST_REQUEST)){
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.BANK_INTEREST_REQUEST);
                 message.setJMSCorrelationID(String.valueOf((((BankInterestRequest)rr.getRequest()).getSsn())));
                 message.setIntProperty(Constants.SSN, (((BankInterestRequest)rr.getRequest()).getSsn()));
                 message.setIntProperty(Constants.AMOUNT, (((BankInterestRequest)rr.getRequest()).getAmount()));
                 message.setIntProperty(Constants.TIME, (((BankInterestRequest)rr.getRequest()).getTime()));
-            } else if (destination == Constants.BANK_INTEREST_REPLY){
-                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_BANK_REPLY);
-                message.setJMSCorrelationID(message.getJMSMessageID());
+            } else if (destination.equals(Constants.BANK_INTEREST_REPLY)){
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.BANK_INTEREST_REPLY);
+                message.setJMSCorrelationID(String.valueOf((((BankInterestReply)rr.getReply()).getSsn())));
                 message.setDoubleProperty(Constants.INTEREST, (((BankInterestReply)rr.getReply()).getInterest()));
                 message.setStringProperty(Constants.BANK_NAME, (((BankInterestReply)rr.getReply()).getQuoteId()));
             } else {
-                message.setStringProperty(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_LOAN_REPLY);
-                message.setJMSCorrelationID(message.getJMSMessageID());
+                message.setStringProperty(Constants.REQUEST_TYPE, Constants.LOAN_REPLY);
+                message.setJMSCorrelationID(String.valueOf((((LoanReply)rr.getReply()).getSsn())));
                 message.setDoubleProperty(Constants.INTEREST, (((LoanReply)rr.getReply()).getInterest()));
                 message.setStringProperty(Constants.BANK_NAME, (((LoanReply)rr.getReply()).getQuoteID()));
             }

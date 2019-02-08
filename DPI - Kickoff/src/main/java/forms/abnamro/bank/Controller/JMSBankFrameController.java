@@ -70,17 +70,22 @@ public class JMSBankFrameController extends Application implements MessageListen
 
     @FXML
     public void onBtnSendReplyClick(ActionEvent event) {
-        if (!tfAmount.getText().isEmpty() && lvRequestReply.getSelectionModel().getSelectedItem() != null && checkText(tfAmount.getText())) {
+        RequestReply selectedItem = lvRequestReply.getSelectionModel().getSelectedItem();
+        if (!tfAmount.getText().isEmpty() && selectedItem != null && checkText(tfAmount.getText())) {
             BankInterestReply reply = new BankInterestReply();
             reply.setInterest(Double.parseDouble(tfAmount.getText()));
             reply.setQuoteId("abn");
+            reply.setSsn(((BankInterestRequest)selectedItem.getRequest()).getSsn());
+            selectedItem.setReply(reply);
+            lvRequestReply.refresh();
             broker.sendMessage(new RequestReply(null, reply), Constants.BANK_INTEREST_REPLY);
         }
     }
+
     @Override
     public void onMessage(Message message) {
         try {
-            if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.REQUEST_TYPE_BANK)) {
+            if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REQUEST)) {
                 BankInterestRequest request = new BankInterestRequest();
                 request.setSsn(message.getIntProperty(Constants.SSN));
                 request.setAmount(message.getIntProperty(Constants.AMOUNT));
@@ -94,9 +99,7 @@ public class JMSBankFrameController extends Application implements MessageListen
     }
 
     public void addMessageToList(RequestReply request){
-        Platform.runLater(() -> {
-            lvRequestReply.getItems().add(request);
-        });
+        Platform.runLater(() -> lvRequestReply.getItems().add(request));
     }
 
     public boolean checkText(String text){

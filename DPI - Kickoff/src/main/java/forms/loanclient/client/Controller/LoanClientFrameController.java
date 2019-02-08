@@ -74,27 +74,29 @@ public class LoanClientFrameController extends Application implements MessageLis
 
     @Override
     public void onMessage(Message message) {
-        try {
-            if (message.getStringProperty(Constants.REQUEST_TYPE) == Constants.REQUEST_TYPE_LOAN_REPLY) {
-                RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> {
-                    try {
-                        return message.getJMSCorrelationID().equals(((LoanRequest)rr.getRequest()).getSsn());
-                    } catch (JMSException e) {
-                        e.printStackTrace();
-                        return false;
+        Platform.runLater(() -> {
+            try {
+                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.LOAN_REPLY)) {
+                    RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> {
+                        try {
+                            return Integer.parseInt(message.getJMSCorrelationID()) == (((LoanRequest)rr.getRequest()).getSsn());
+                        } catch (JMSException e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    }).findAny().orElse(null);
+                    if (receivingRR != null) {
+                        LoanReply reply = new LoanReply();
+                        reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
+                        reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
+                        receivingRR.setReply(reply);
+                        lvRequestReply.refresh();
                     }
-                }).findAny().orElse(null);
-                if (receivingRR != null) {
-                    LoanReply reply = new LoanReply();
-                    reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
-                    reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
-                    receivingRR.setReply(reply);
-                    lvRequestReply.refresh();
                 }
+            } catch (JMSException e) {
+                e.printStackTrace();
             }
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     @FXML
@@ -111,9 +113,7 @@ public class LoanClientFrameController extends Application implements MessageLis
     }
 
     public void addItemToListView(RequestReply requestReply){
-        Platform.runLater(() -> {
-            this.lvRequestReply.getItems().add(requestReply);
-        });
+        Platform.runLater(() -> this.lvRequestReply.getItems().add(requestReply));
     }
 
     public boolean checkFields(){

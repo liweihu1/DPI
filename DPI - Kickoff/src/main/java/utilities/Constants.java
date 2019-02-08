@@ -7,7 +7,7 @@ public final class Constants {
 
     public static final String SSN = "ssn";
     public static final String AMOUNT = "amount";
-    public static final String TIME = "amount";
+    public static final String TIME = "time";
     public static final String INTEREST = "interest";
     public static final String BANK_NAME = "bankName";
 
@@ -22,8 +22,4 @@ public final class Constants {
     public static final String LOAN_REPLY_QUEUE = "queue.LoanReply";
 
     public static final String REQUEST_TYPE = "requestType";
-    public static final String REQUEST_TYPE_BANK = "bankInterest";
-    public static final String REQUEST_TYPE_LOAN = "loan";
-    public static final String REQUEST_TYPE_LOAN_REPLY = "loanReply";
-    public static final String REQUEST_TYPE_BANK_REPLY = "bankReply";
 }

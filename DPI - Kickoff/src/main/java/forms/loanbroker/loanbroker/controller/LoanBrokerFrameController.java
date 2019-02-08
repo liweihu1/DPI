@@ -9,9 +9,8 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import messaging.MessageBroker;
 import mix.messaging.requestreply.RequestReply;
-import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
-import mix.model.loan.LoanRequest;
+import mix.model.loan.LoanReply;
 import utilities.Constants;
 
 import javax.jms.*;
@@ -73,46 +72,43 @@ public class LoanBrokerFrameController extends Application implements MessageLis
 
     @Override
     public void onMessage(Message message) {
-        try {
-            if (message.getStringProperty(Constants.REQUEST_TYPE) == Constants.REQUEST_TYPE_BANK_REPLY) {
-                BankInterestReply reply = new BankInterestReply();
-                LoanRequest initialRequest = new LoanRequest();
-                initialRequest.setSsn(message.getIntProperty(Constants.SSN));
-                reply.setQuoteId(message.getStringProperty(Constants.BANK_NAME));
-                reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
-                RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> {
-                    try {
-                        return message.getJMSCorrelationID().equals(((BankInterestRequest)rr.getReply()).getSsn());
-                    } catch (JMSException e) {
-                        e.printStackTrace();
-                        return false;
+        Platform.runLater(() -> {
+            try {
+                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REPLY)) {
+                    LoanReply reply = new LoanReply();
+                    reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
+                    reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
+                    reply.setSsn(Integer.parseInt(message.getJMSCorrelationID()));
+                    RequestReply receivingRR = this.lvRequestReply.getItems().stream().filter(rr -> {
+                        try {
+                            return Integer.parseInt(message.getJMSCorrelationID()) == (((BankInterestRequest)rr.getRequest()).getSsn());
+                        } catch (JMSException e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    }).findAny().orElse(null);
+                    if (receivingRR != null) {
+                        receivingRR.setReply(reply);
+                        lvRequestReply.refresh();
                     }
-                }).findAny().orElse(null);
-                if (receivingRR != null) {
-                    receivingRR.setReply(reply);
-                    lvRequestReply.refresh();
+                    broker.sendMessage(new RequestReply(null, reply), Constants.LOAN_REPLY);
+                } else {
+                    BankInterestRequest request = new BankInterestRequest();
+                    request.setSsn(Integer.parseInt(message.getJMSCorrelationID()));
+                    request.setAmount(message.getIntProperty(Constants.AMOUNT));
+                    request.setTime(message.getIntProperty(Constants.TIME));
+                    RequestReply requestReply = new RequestReply(request, null);
+                    System.out.println(requestReply);
+                    broker.sendMessage(requestReply, Constants.BANK_INTEREST_REQUEST);
+                    addRequestToList(requestReply);
                 }
-                broker.sendMessage(new RequestReply(null, reply), Constants.LOAN_REPLY);
-            } else {
-                BankInterestRequest request = new BankInterestRequest();
-                request.setSsn(Integer.parseInt(message.getJMSCorrelationID()));
-                request.setAmount(message.getIntProperty(Constants.AMOUNT));
-                request.setTime(message.getIntProperty(Constants.TIME));
-                RequestReply requestReply = new RequestReply(request, null);
-                System.out.println(requestReply);
-                broker.sendMessage(requestReply, Constants.BANK_INTEREST_REQUEST);
-                addRequestToList(requestReply);
+            } catch (JMSException e) {
+                e.printStackTrace();
             }
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     public void addRequestToList(RequestReply request) {
-        if (request != null) {
-            Platform.runLater(() -> {
-                this.lvRequestReply.getItems().add(request);
-            });
-        }
+        this.lvRequestReply.getItems().add(request);
     }
 }
