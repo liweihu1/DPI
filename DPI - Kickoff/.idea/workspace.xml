@@ -16,12 +16,12 @@
       <file leaf-file-name="LoanBrokerFrameController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanbroker/loanbroker/controller/LoanBrokerFrameController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-562">
+            <state relative-caret-position="357">
               <caret line="39" column="8" selection-start-line="39" selection-start-column="8" selection-end-line="62" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4825#4826#0" expanded="true" />
-                <element signature="e#4895#4896#0" expanded="true" />
+                <element signature="e#4903#4904#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -30,8 +30,8 @@
       <file leaf-file-name="MessageBroker.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/messaging/MessageBroker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="66" column="65" lean-forward="true" selection-end-line="88" />
+            <state relative-caret-position="935">
+              <caret line="66" column="65" selection-end-line="88" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -42,8 +42,8 @@
       <file leaf-file-name="Constants.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/utilities/Constants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="333">
-              <caret line="20" column="60" lean-forward="true" selection-end-line="25" />
+            <state relative-caret-position="340">
+              <caret line="20" column="60" selection-end-line="25" />
             </state>
           </provider>
         </entry>
@@ -52,7 +52,7 @@
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="289">
-              <caret line="17" lean-forward="true" selection-end-line="24" selection-end-column="10" />
+              <caret line="17" selection-end-line="24" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -60,8 +60,8 @@
       <file leaf-file-name="LoanReply.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/loan/LoanReply.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="19" column="25" lean-forward="true" selection-end-line="59" />
+            <state relative-caret-position="323">
+              <caret line="19" column="25" selection-end-line="59" />
             </state>
           </provider>
         </entry>
@@ -69,8 +69,8 @@
       <file leaf-file-name="LoanRequest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/loan/LoanRequest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="20" column="22" lean-forward="true" selection-end-line="59" />
+            <state relative-caret-position="340">
+              <caret line="20" column="22" selection-end-line="59" />
             </state>
           </provider>
         </entry>
@@ -78,7 +78,7 @@
       <file leaf-file-name="BankInterestReply.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/bank/BankInterestReply.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
+            <state relative-caret-position="357">
               <caret line="21" column="49" selection-end-line="55" />
             </state>
           </provider>
@@ -87,8 +87,8 @@
       <file leaf-file-name="BankInterestRequest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/bank/BankInterestRequest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="29" column="39" lean-forward="true" selection-end-line="57" />
+            <state relative-caret-position="493">
+              <caret line="29" column="39" selection-end-line="57" />
             </state>
           </provider>
         </entry>
@@ -96,14 +96,12 @@
       <file leaf-file-name="JMSBankFrameController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/forms/abnamro/bank/Controller/JMSBankFrameController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="87" column="8" selection-start-line="87" selection-start-column="8" selection-end-line="98" selection-end-column="9" />
+            <state relative-caret-position="326">
+              <caret line="88" column="80" selection-start-line="88" selection-start-column="80" selection-end-line="88" selection-end-column="80" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4122#4123#0" expanded="true" />
-                <element signature="e#4192#4193#0" expanded="true" />
-                <element signature="e#4185#4186#0" expanded="true" />
-                <element signature="e#4239#4240#0" expanded="true" />
+                <element signature="e#4200#4201#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -112,7 +110,7 @@
       <file leaf-file-name="LoanClientFrameController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanclient/client/Controller/LoanClientFrameController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-952">
+            <state relative-caret-position="425">
               <caret line="44" column="8" selection-start-line="44" selection-start-column="8" selection-end-line="63" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -190,17 +188,18 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1928" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="-7" />
+    <option name="y" value="-29" />
+    <option name="width" value="3856" />
+    <option name="height" value="2092" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -251,15 +250,6 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="forms" type="462c0819:PsiDirectoryNode" />
               <item name="controller" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DPI - Kickoff" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DPI - Kickoff" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="forms" type="462c0819:PsiDirectoryNode" />
-              <item name="Controller" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DPI - Kickoff" type="b2602c69:ProjectViewProjectNode" />
@@ -348,8 +338,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -493,19 +482,18 @@
       <workItem from="1549613124929" duration="155000" />
       <workItem from="1549630753807" duration="899000" />
       <workItem from="1549639694604" duration="5212000" />
+      <workItem from="1549871624295" duration="207000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35840000" />
+    <option name="totallyTimeSpent" value="36047000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.32897604" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
@@ -518,7 +506,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13432837" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13539445" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -526,35 +514,13 @@
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39215687" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info id="Designer" order="2" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32570806" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info anchor="bottom" id="Spring" order="7" />
-      <window_info id="UI Designer" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39215687" />
-      <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32897604" />
       <window_info anchor="bottom" id="Messages" order="7" weight="0.32897604" />
-      <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13432837" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -772,14 +738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="22" selection-start-line="22" selection-end-line="22" />
-          <folding>
-            <element signature="e#771#772#0" expanded="true" />
-            <element signature="e#792#793#0" expanded="true" />
-            <element signature="e#838#839#0" expanded="true" />
-            <element signature="e#867#868#0" expanded="true" />
-            <element signature="e#954#955#0" expanded="true" />
-            <element signature="e#979#980#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -826,28 +784,28 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/views/JMSBankFrame.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="11" lean-forward="true" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
         </state>
       </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/views/LoanBrokerFrame.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="291" selection-start-line="6" selection-start-column="291" selection-end-line="6" selection-end-column="291" />
         </state>
       </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/views/LoanClientFrame.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="287" selection-start-line="13" selection-start-column="287" selection-end-line="13" selection-end-column="287" />
         </state>
       </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/javafx-src.zip!/javafx/application/Platform.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -861,8 +819,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/messaging/MessageBroker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="66" column="65" lean-forward="true" selection-end-line="88" />
+        <state relative-caret-position="935">
+          <caret line="66" column="65" selection-end-line="88" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -871,8 +829,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utilities/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="20" column="60" lean-forward="true" selection-end-line="25" />
+        <state relative-caret-position="340">
+          <caret line="20" column="60" selection-end-line="25" />
         </state>
       </provider>
     </entry>
@@ -886,53 +844,53 @@
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
-          <caret line="17" lean-forward="true" selection-end-line="24" selection-end-column="10" />
+          <caret line="17" selection-end-line="24" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/loan/LoanReply.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="19" column="25" lean-forward="true" selection-end-line="59" />
+        <state relative-caret-position="323">
+          <caret line="19" column="25" selection-end-line="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/loan/LoanRequest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="20" column="22" lean-forward="true" selection-end-line="59" />
+        <state relative-caret-position="340">
+          <caret line="20" column="22" selection-end-line="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/bank/BankInterestReply.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
+        <state relative-caret-position="357">
           <caret line="21" column="49" selection-end-line="55" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/mix/model/bank/BankInterestRequest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="29" column="39" lean-forward="true" selection-end-line="57" />
+        <state relative-caret-position="493">
+          <caret line="29" column="39" selection-end-line="57" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanbroker/loanbroker/controller/LoanBrokerFrameController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-562">
+        <state relative-caret-position="357">
           <caret line="39" column="8" selection-start-line="39" selection-start-column="8" selection-end-line="62" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4825#4826#0" expanded="true" />
-            <element signature="e#4895#4896#0" expanded="true" />
+            <element signature="e#4903#4904#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/forms/loanclient/client/Controller/LoanClientFrameController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-952">
+        <state relative-caret-position="425">
           <caret line="44" column="8" selection-start-line="44" selection-start-column="8" selection-end-line="63" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -943,14 +901,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/forms/abnamro/bank/Controller/JMSBankFrameController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="87" column="8" selection-start-line="87" selection-start-column="8" selection-end-line="98" selection-end-column="9" />
+        <state relative-caret-position="326">
+          <caret line="88" column="80" selection-start-line="88" selection-start-column="80" selection-end-line="88" selection-end-column="80" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4122#4123#0" expanded="true" />
-            <element signature="e#4192#4193#0" expanded="true" />
-            <element signature="e#4185#4186#0" expanded="true" />
-            <element signature="e#4239#4240#0" expanded="true" />
+            <element signature="e#4200#4201#0" expanded="true" />
           </folding>
         </state>
       </provider>
