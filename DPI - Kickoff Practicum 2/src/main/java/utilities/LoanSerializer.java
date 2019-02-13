@@ -5,7 +5,6 @@ import mix.model.bank.BankInterestReply;
 import mix.model.loan.LoanReply;
 import mix.model.loan.LoanRequest;
 
-import javax.jms.Message;
 import java.io.IOException;
 
 public class LoanSerializer {

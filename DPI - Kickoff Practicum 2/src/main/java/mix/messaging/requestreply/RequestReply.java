@@ -11,15 +11,15 @@ package mix.messaging.requestreply;
  * @param <REPLY>
  */
 public class RequestReply<REQUEST,REPLY> {
-	
+
 	private REQUEST request;
 	private REPLY reply;
 	
 	public RequestReply(REQUEST request,  REPLY reply) {
 		setRequest(request);
 		setReply(reply);
-	}	
-	
+	}
+
 	public REQUEST getRequest() {
 		return request;
 	}

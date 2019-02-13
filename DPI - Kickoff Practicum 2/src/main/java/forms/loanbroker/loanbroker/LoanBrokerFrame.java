@@ -54,11 +54,16 @@ public class LoanBrokerFrame extends JFrame {
 
 	    bankBrokerAppGateway = new BankBrokerAppGateway(){
 			@Override
-			public void onBankInterestReplyArrived(BankInterestReply reply) {
-				super.onBankInterestReplyArrived(reply);
+			public void onBankInterestReplyArrived(BankInterestReply reply, String id) {
+				super.onBankInterestReplyArrived(reply, id);
+				updateLoanRequestWithIdReply(reply, id);
 			}
 		};
     }
+
+    public void updateLoanRequestWithIdReply(BankInterestReply reply, String id){
+		// TODO UPDATE UI
+	}
 
 	/**
 	 * Create the frame.
@@ -105,22 +110,5 @@ public class LoanBrokerFrame extends JFrame {
 	
 	public void addLoanRequestToList(LoanRequest loanRequest){
 		listModel.addElement(new JListLine(loanRequest));		
-	}
-	
-
-	public void add(LoanRequest loanRequest,BankInterestRequest bankRequest){
-		JListLine rr = getRequestReply(loanRequest);
-		if (rr!= null && bankRequest != null){
-			rr.setBankRequest(bankRequest);
-            list.repaint();
-		}		
-	}
-	
-	public void add(LoanRequest loanRequest, BankInterestReply bankReply){
-		JListLine rr = getRequestReply(loanRequest);
-		if (rr!= null && bankReply != null){
-			rr.setBankReply(bankReply);
-            list.repaint();
-		}		
 	}
 }

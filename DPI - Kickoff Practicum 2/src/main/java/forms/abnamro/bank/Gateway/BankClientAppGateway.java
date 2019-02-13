@@ -16,26 +16,28 @@ public class BankClientAppGateway {
     private BankInterestSerializer serializer;
 
     public BankClientAppGateway(){
-        sender = new MessageSenderGateway(Constants.BANK_INTEREST_REPLY);
-        receiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REQUEST);
+        sender = new MessageSenderGateway(Constants.BANK_INTEREST_REPLY, Constants.BANK_INTEREST_REPLY_QUEUE);
+        receiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REQUEST, Constants.BANK_INTEREST_REQUEST_QUEUE);
         serializer = new BankInterestSerializer();
 
         receiver.setListener(message -> {
             try {
-                onBankInterestRequestArrived(serializer.stringToBankInterestRequest(message.getStringProperty(Constants.BANK_INTEREST_REQUEST_JSON_STRING)));
+                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REQUEST)){
+                    onBankInterestRequestArrived(serializer.stringToBankInterestRequest(message.getStringProperty(Constants.BANK_INTEREST_REQUEST_JSON_STRING)), message.getJMSCorrelationID());
+                }
             } catch (JMSException e) {
                 e.printStackTrace();
             }
         });
     }
 
-    public void returnBankInterestReply(BankInterestRequest request, BankInterestReply reply){
+    public void returnBankInterestReply(BankInterestReply reply, String id){
         String replyString = serializer.bankInterestReplyToString(reply);
-        Message message = sender.createMessageWithContent(Constants.BANK_INTEREST_REPLY_JSON_STRING, replyString, String.valueOf(request.getSsn()));
+        Message message = sender.createMessageWithContent(Constants.BANK_INTEREST_REPLY_JSON_STRING, replyString, id, Constants.BANK_INTEREST_REPLY);
         sender.send(message);
     }
 
-    public void onBankInterestRequestArrived(BankInterestRequest request){
-
+    public void onBankInterestRequestArrived(BankInterestRequest request, String id){
+        // DO NOTHING
     }
 }

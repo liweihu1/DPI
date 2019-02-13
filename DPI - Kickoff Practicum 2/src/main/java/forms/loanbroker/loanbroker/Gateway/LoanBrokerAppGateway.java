@@ -10,6 +10,7 @@ import utilities.LoanSerializer;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageListener;
 
 public class LoanBrokerAppGateway {
     private MessageSenderGateway sender;
@@ -18,15 +19,17 @@ public class LoanBrokerAppGateway {
     private BankInterestSerializer bankInterestSerializer;
 
     public LoanBrokerAppGateway(){
-        sender = new MessageSenderGateway(Constants.BANK_INTEREST_REQUEST);
-        loanRequestReceiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REQUEST);
+        sender = new MessageSenderGateway(Constants.BANK_INTEREST_REQUEST, Constants.BANK_INTEREST_REQUEST_QUEUE);
+        loanRequestReceiver = new MessageReceiverGateway(Constants.LOAN_REQUEST, Constants.LOAN_REQUEST_QUEUE);
         loanSerializer = new LoanSerializer();
         bankInterestSerializer = new BankInterestSerializer();
 
         loanRequestReceiver.setListener(message -> {
             try {
-                String jsonString = message.getStringProperty(Constants.LOAN_REQUEST_JSON_STRING);
-                onLoanRequestArrived(loanSerializer.jsonStringToLoanRequest(jsonString));
+                if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.LOAN_REQUEST)){
+                    String jsonString = message.getStringProperty(Constants.LOAN_REQUEST_JSON_STRING);
+                    onLoanRequestArrived(loanSerializer.jsonStringToLoanRequest(jsonString));
+                }
             } catch (JMSException e) {
                 e.printStackTrace();
             }
@@ -34,12 +37,12 @@ public class LoanBrokerAppGateway {
     }
 
     public void onLoanRequestArrived(LoanRequest request) {
-        sendBankRequestToBank(bankInterestSerializer.loanRequestToBankInterestRequest(request));
+        sendBankRequestToBank(bankInterestSerializer.loanRequestToBankInterestRequest(request), String.valueOf(request.getId()));
     }
 
-    public void sendBankRequestToBank(BankInterestRequest request){
+    public void sendBankRequestToBank(BankInterestRequest request, String id){
         String jsonString = bankInterestSerializer.bankInterestRequestToString(request);
-        Message message = sender.createMessageWithContent(Constants.BANK_INTEREST_REQUEST_JSON_STRING, jsonString, String.valueOf(request.getSsn()));
+        Message message = sender.createMessageWithContent(Constants.BANK_INTEREST_REQUEST_JSON_STRING, jsonString, id, Constants.BANK_INTEREST_REQUEST);
         sender.send(message);
     }
 }

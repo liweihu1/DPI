@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.UUID;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -112,8 +113,9 @@ public class LoanClientFrame extends JFrame {
 			int amount = Integer.parseInt(tfAmount.getText());
 			int time = Integer.parseInt(tfTime.getText());
 
-			LoanRequest request = new LoanRequest(ssn,amount,time);
+			LoanRequest request = new LoanRequest(UUID.randomUUID(), ssn,amount,time);
 			loanClientAppGateway.applyForLoan(request);
+			addRequestToList(request);
 		});
 		GridBagConstraints gbc_btnQueue = new GridBagConstraints();
 		gbc_btnQueue.insets = new Insets(0, 0, 5, 5);
@@ -138,14 +140,18 @@ public class LoanClientFrame extends JFrame {
 	public void initLoanBrokerGateway(){
 		loanClientAppGateway = new LoanClientAppGateway(){
 			@Override
-			public void onLoanReplyArrived(LoanRequest request, LoanReply reply) {
-				super.onLoanReplyArrived(request, reply);
-				updateRequestReplyWithRequestAndReply(request, reply);
+			public void onLoanReplyArrived(LoanReply reply, String requestId) {
+				super.onLoanReplyArrived(reply, requestId);
+				updateRequestReplyWithRequestAndReply(reply, requestId);
 			}
 		};
 	}
 
-	public void updateRequestReplyWithRequestAndReply(LoanRequest request, LoanReply reply){
+	public void addRequestToList(LoanRequest request){
+		this.listModel.add(listModel.getSize(), new RequestReply<>(request, null));
+	}
+
+	public void updateRequestReplyWithRequestAndReply(LoanReply reply, String requestId){
 		//TODO UPDATE UI
 	}
 

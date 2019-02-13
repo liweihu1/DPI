@@ -1,6 +1,7 @@
 package mix.model.loan;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  *
@@ -10,6 +11,7 @@ import java.io.Serializable;
  */
 public class LoanRequest implements Serializable {
 
+    private UUID id;
     private int ssn; // unique client number.
     private int amount; // the ammount to borrow
     private int time; // the time-span of the loan
@@ -21,11 +23,21 @@ public class LoanRequest implements Serializable {
         this.time = 0;
     }
 
-    public LoanRequest(int ssn, int amount, int time) {
+    public LoanRequest(UUID id, int ssn, int amount, int time) {
         super();
+        this.id = id;
         this.ssn = ssn;
         this.amount = amount;
         this.time = time;
+    }
+
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public int getSsn() {

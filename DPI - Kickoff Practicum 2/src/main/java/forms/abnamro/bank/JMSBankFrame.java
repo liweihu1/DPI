@@ -35,8 +35,8 @@ public class JMSBankFrame extends JFrame {
 	private void initJMSBankFrame() {
 		bankClientAppGateway = new BankClientAppGateway(){
 			@Override
-			public void onBankInterestRequestArrived(BankInterestRequest request) {
-				super.onBankInterestRequestArrived(request);
+			public void onBankInterestRequestArrived(BankInterestRequest request, String id) {
+				super.onBankInterestRequestArrived(request, id);
 				addRequestToList(request);
 			}
 		};
@@ -116,7 +116,7 @@ public class JMSBankFrame extends JFrame {
                 BankInterestReply reply = new BankInterestReply(rr.getRequest().getSsn(), interest,"ABN AMRO");
                 rr.setReply(reply);
                 list.repaint();
-                bankClientAppGateway.returnBankInterestReply(rr.getRequest(), reply);
+                bankClientAppGateway.returnBankInterestReply(reply, String.valueOf(rr.getRequest().getId()));
             }
         });
 		GridBagConstraints gbc_btnSendReply = new GridBagConstraints();

@@ -1,6 +1,7 @@
 package mix.model.bank;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  *
@@ -9,6 +10,7 @@ import java.io.Serializable;
  */
 public class BankInterestRequest implements Serializable {
 
+    private UUID id;
     private int ssn;
     private int amount; // the requested loan amount
     private int time; // the requested loan period
@@ -25,6 +27,14 @@ public class BankInterestRequest implements Serializable {
         this.ssn = ssn;
         this.amount = amount;
         this.time = time;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public int getSsn() { return ssn; }
