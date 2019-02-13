@@ -12,12 +12,11 @@ import javax.jms.Message;
 
 public class BankClientAppGateway {
     private MessageSenderGateway sender;
-    private MessageReceiverGateway receiver;
     private BankInterestSerializer serializer;
 
-    public BankClientAppGateway(){
+    protected BankClientAppGateway(){
         sender = new MessageSenderGateway(Constants.BANK_INTEREST_REPLY, Constants.BANK_INTEREST_REPLY_QUEUE);
-        receiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REQUEST, Constants.BANK_INTEREST_REQUEST_QUEUE);
+        MessageReceiverGateway receiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REQUEST, Constants.BANK_INTEREST_REQUEST_QUEUE);
         serializer = new BankInterestSerializer();
 
         receiver.setListener(message -> {

@@ -10,9 +10,7 @@ import javax.naming.NamingException;
 import java.util.Properties;
 
 public class MessageSenderGateway {
-    private Connection connection;
     private Session session;
-    private Destination destination;
     private MessageProducer producer;
 
     public MessageSenderGateway(String channelName, String queueName){
@@ -25,10 +23,10 @@ public class MessageSenderGateway {
             Context jndiContext = new InitialContext(props);
             ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup("ConnectionFactory");
 
-            connection = connectionFactory.createConnection();
+            Connection connection = connectionFactory.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            destination = (Destination) jndiContext.lookup(channelName);
+            Destination destination = (Destination) jndiContext.lookup(channelName);
 
             producer = session.createProducer(destination);
 

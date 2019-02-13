@@ -1,6 +1,5 @@
 package forms.loanbroker.loanbroker.Gateway;
 
-import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 import messaging.Gateway.MessageReceiverGateway;
 import messaging.Gateway.MessageSenderGateway;
 import mix.model.bank.BankInterestReply;
@@ -14,13 +13,12 @@ import javax.jms.Message;
 
 public class BankBrokerAppGateway {
     private MessageSenderGateway sender;
-    private MessageReceiverGateway bankInterestReceiver;
     private BankInterestSerializer bankInterestSerializer;
     private LoanSerializer loanSerializer;
 
-    public BankBrokerAppGateway(){
+    protected BankBrokerAppGateway(){
         sender = new MessageSenderGateway(Constants.LOAN_REPLY, Constants.LOAN_REPLY_QUEUE);
-        bankInterestReceiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REPLY, Constants.BANK_INTEREST_REPLY_QUEUE);
+        MessageReceiverGateway bankInterestReceiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REPLY, Constants.BANK_INTEREST_REPLY_QUEUE);
         bankInterestSerializer = new BankInterestSerializer();
         loanSerializer = new LoanSerializer();
 
@@ -40,7 +38,7 @@ public class BankBrokerAppGateway {
         sendLoanReplyToLoanClient(loanSerializer.bankInterestReplyToLoanReply(reply), id);
     }
 
-    public void sendLoanReplyToLoanClient(LoanReply reply, String id){
+    private void sendLoanReplyToLoanClient(LoanReply reply, String id){
         Message message = sender.createMessageWithContent(Constants.LOAN_REPLY_JSON_STRING, loanSerializer.loanReplyToJsonString(reply), id, Constants.LOAN_REPLY);
         sender.send(message);
     }

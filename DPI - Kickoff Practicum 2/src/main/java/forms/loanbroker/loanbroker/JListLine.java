@@ -2,7 +2,6 @@ package forms.loanbroker.loanbroker;
 
 
 import mix.model.bank.BankInterestReply;
-import mix.model.bank.BankInterestRequest;
 import mix.model.loan.LoanRequest;
 
 /**
@@ -17,36 +16,22 @@ import mix.model.loan.LoanRequest;
  *
  */
 class JListLine {
-	
 	private LoanRequest loanRequest;
-	private BankInterestRequest bankRequest;
 	private BankInterestReply bankReply;
 
-	public JListLine(LoanRequest loanRequest) {
+	JListLine(LoanRequest loanRequest) {
 		this.setLoanRequest(loanRequest);
 	}
 
-	public LoanRequest getLoanRequest() {
+	LoanRequest getLoanRequest() {
 		return loanRequest;
 	}
 
-	public void setLoanRequest(LoanRequest loanRequest) {
+	private void setLoanRequest(LoanRequest loanRequest) {
 		this.loanRequest = loanRequest;
 	}
 
-	public BankInterestRequest getBankRequest() {
-		return bankRequest;
-	}
-
-	public void setBankRequest(BankInterestRequest bankRequest) {
-		this.bankRequest = bankRequest;
-	}
-
-	public BankInterestReply getBankReply() {
-		return bankReply;
-	}
-
-	public void setBankReply(BankInterestReply bankReply) {
+	void setBankReply(BankInterestReply bankReply) {
 		this.bankReply = bankReply;
 	}
 

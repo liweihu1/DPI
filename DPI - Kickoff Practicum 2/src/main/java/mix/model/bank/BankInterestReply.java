@@ -8,7 +8,6 @@ import java.io.Serializable;
  *
  */
 public class BankInterestReply implements Serializable {
-
     private double interest; // the loan interest
     private String bankId; // the nunique quote Id
 
@@ -17,7 +16,7 @@ public class BankInterestReply implements Serializable {
         this.bankId = "";
     }
 
-    public BankInterestReply(int ssn, double interest, String quoteId) {
+    public BankInterestReply(double interest, String quoteId) {
         this.interest = interest;
         this.bankId = quoteId;
     }

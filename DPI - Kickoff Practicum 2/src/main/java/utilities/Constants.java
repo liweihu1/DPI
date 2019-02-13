@@ -1,12 +1,6 @@
 package utilities;
 
 public final class Constants {
-    public static final String SSN = "ssn";
-    public static final String AMOUNT = "amount";
-    public static final String TIME = "time";
-    public static final String INTEREST = "interest";
-    public static final String BANK_NAME = "bankName";
-
     public static final String BANK_INTEREST_REQUEST_JSON_STRING = "BankRequest";
     public static final String BANK_INTEREST_REPLY_JSON_STRING = "BankReply";
     public static final String LOAN_REQUEST_JSON_STRING = "LoanRequest";

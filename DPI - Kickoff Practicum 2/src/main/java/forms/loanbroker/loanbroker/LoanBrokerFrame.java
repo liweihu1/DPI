@@ -3,37 +3,24 @@ package forms.loanbroker.loanbroker;
 import forms.loanbroker.loanbroker.Gateway.BankBrokerAppGateway;
 import forms.loanbroker.loanbroker.Gateway.LoanBrokerAppGateway;
 import mix.model.bank.BankInterestReply;
-import mix.model.bank.BankInterestRequest;
 import mix.model.loan.LoanRequest;
 
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Objects;
 import java.util.UUID;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 
 public class LoanBrokerFrame extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private DefaultListModel<JListLine> listModel = new DefaultListModel<JListLine>();
-	private JList<JListLine> list;
+    private DefaultListModel<JListLine> listModel = new DefaultListModel<>();
 
-	private LoanBrokerAppGateway loanBrokerAppGateway;
-	private BankBrokerAppGateway bankBrokerAppGateway;
-	
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
 				LoanBrokerFrame frame = new LoanBrokerFrame();
@@ -44,37 +31,14 @@ public class LoanBrokerFrame extends JFrame {
 		});
 	}
 
-	public void initLoanBrokerFrame(){
-	    loanBrokerAppGateway = new LoanBrokerAppGateway(){
-			@Override
-			public void onLoanRequestArrived(LoanRequest request) {
-				super.onLoanRequestArrived(request);
-				addLoanRequestToList(request);
-			}
-		};
-
-	    bankBrokerAppGateway = new BankBrokerAppGateway(){
-			@Override
-			public void onBankInterestReplyArrived(BankInterestReply reply, String id) {
-				super.onBankInterestReplyArrived(reply, id);
-				updateLoanRequestWithIdReply(reply, id);
-			}
-		};
-    }
-
-    public void updateLoanRequestWithIdReply(BankInterestReply reply, String id){
-		getRequestReplyById(id).setBankReply(reply);
-		repaint();
-	}
-
 	/**
 	 * Create the frame.
 	 */
-	public LoanBrokerFrame() {
+    private LoanBrokerFrame() {
 		setTitle("Loan Broker");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -92,12 +56,38 @@ public class LoanBrokerFrame extends JFrame {
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 0;
 		contentPane.add(scrollPane, gbc_scrollPane);
-		
-		list = new JList<JListLine>(listModel);
+
+        JList<JListLine> list = new JList<>(listModel);
 		scrollPane.setViewportView(list);
 
-		initLoanBrokerFrame();
+		initLoanBrokerGateways();
 	}
+
+    /**
+     * Creates the gateways.
+     */
+    private void initLoanBrokerGateways(){
+        new LoanBrokerAppGateway() {
+            @Override
+            public void onLoanRequestArrived(LoanRequest request) {
+                super.onLoanRequestArrived(request);
+                addLoanRequestToList(request);
+            }
+        };
+
+        new BankBrokerAppGateway() {
+            @Override
+            public void onBankInterestReplyArrived(BankInterestReply reply, String id) {
+                super.onBankInterestReplyArrived(reply, id);
+                updateLoanRequestWithIdReply(reply, id);
+            }
+        };
+    }
+
+    private void updateLoanRequestWithIdReply(BankInterestReply reply, String id){
+        Objects.requireNonNull(getRequestReplyById(id)).setBankReply(reply);
+        repaint();
+    }
 
 	private JListLine getRequestReplyById(String id){
 		for (int i = 0; i < listModel.getSize(); i++){
@@ -109,8 +99,8 @@ public class LoanBrokerFrame extends JFrame {
 
 		return null;
 	}
-	
-	public void addLoanRequestToList(LoanRequest loanRequest){
+
+	private void addLoanRequestToList(LoanRequest loanRequest){
 		listModel.addElement(new JListLine(loanRequest));
 		repaint();
 	}

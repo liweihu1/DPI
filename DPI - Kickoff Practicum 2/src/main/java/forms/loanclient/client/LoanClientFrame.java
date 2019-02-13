@@ -3,16 +3,10 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Objects;
 import java.util.UUID;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import forms.loanclient.client.Gateway.LoanClientAppGateway;
@@ -21,32 +15,24 @@ import mix.model.loan.LoanReply;
 import mix.model.loan.LoanRequest;
 
 public class LoanClientFrame extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField tfSSN;
-	private DefaultListModel<RequestReply<LoanRequest,LoanReply>> listModel = new DefaultListModel<RequestReply<LoanRequest,LoanReply>>();
-	private JList<RequestReply<LoanRequest,LoanReply>> requestReplyList;
+    private JTextField tfSSN;
+	private DefaultListModel<RequestReply<LoanRequest,LoanReply>> listModel = new DefaultListModel<>();
 
-	private JTextField tfAmount;
-	private JLabel lblNewLabel;
-	private JLabel lblNewLabel_1;
-	private JTextField tfTime;
+    private JTextField tfAmount;
+    private JTextField tfTime;
 
 	private LoanClientAppGateway loanClientAppGateway;
 
 	/**
 	 * Create the frame.
 	 */
-	public LoanClientFrame() {
+    private LoanClientFrame() {
 		setTitle("Loan Client");
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 684, 619);
-		contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -71,8 +57,8 @@ public class LoanClientFrame extends JFrame {
 		gbc_tfSSN.gridy = 0;
 		contentPane.add(tfSSN, gbc_tfSSN);
 		tfSSN.setColumns(10);
-		
-		lblNewLabel = new JLabel("amount");
+
+        JLabel lblNewLabel = new JLabel("amount");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
@@ -89,8 +75,8 @@ public class LoanClientFrame extends JFrame {
 		gbc_tfAmount.gridy = 1;
 		contentPane.add(tfAmount, gbc_tfAmount);
 		tfAmount.setColumns(10);
-		
-		lblNewLabel_1 = new JLabel("time");
+
+        JLabel lblNewLabel_1 = new JLabel("time");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.anchor = GridBagConstraints.EAST;
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
@@ -131,13 +117,13 @@ public class LoanClientFrame extends JFrame {
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 4;
 		contentPane.add(scrollPane, gbc_scrollPane);
-		
-		requestReplyList = new JList<RequestReply<LoanRequest,LoanReply>>(listModel);
+
+        JList<RequestReply<LoanRequest, LoanReply>> requestReplyList = new JList<>(listModel);
 		scrollPane.setViewportView(requestReplyList);
 		initLoanBrokerGateway();
 	}
 
-	public void initLoanBrokerGateway(){
+	private void initLoanBrokerGateway(){
 		loanClientAppGateway = new LoanClientAppGateway(){
 			@Override
 			public void onLoanReplyArrived(LoanReply reply, String requestId) {
@@ -147,33 +133,25 @@ public class LoanClientFrame extends JFrame {
 		};
 	}
 
-	public void addRequestToList(LoanRequest request){
+	private void addRequestToList(LoanRequest request){
 		this.listModel.add(listModel.getSize(), new RequestReply<>(request, null));
 		repaint();
 	}
 
-	public void updateRequestReplyWithRequestAndReply(LoanReply reply, String requestId){
-		getRequestReplyById(requestId).setReply(reply);
+	private void updateRequestReplyWithRequestAndReply(LoanReply reply, String requestId){
+		Objects.requireNonNull(getRequestReplyById(requestId)).setReply(reply);
 		repaint();
 	}
 
-	/**
-	 * This method returns the RequestReply line that belongs to the request from requestReplyList (JList). 
-	 * You can call this method when an reply arrives in order to add this reply to the right request in requestReplyList.
-	 * @param id
-	 * @return
-	 */
-   private RequestReply<LoanRequest,LoanReply> getRequestReplyById(String id){
-     
-     for (int i = 0; i < listModel.getSize(); i++){
-    	 RequestReply<LoanRequest,LoanReply> rr =listModel.get(i);
-    	 if (rr.getRequest().getId().equals(UUID.fromString(id))){
-    		 return rr;
-    	 }
-     }
-     
-     return null;
-   }
+    private RequestReply<LoanRequest,LoanReply> getRequestReplyById(String id){
+        for (int i = 0; i < listModel.getSize(); i++){
+            RequestReply<LoanRequest,LoanReply> rr =listModel.get(i);
+            if (rr.getRequest().getId().equals(UUID.fromString(id))){
+                return rr;
+            }
+         }
+        return null;
+    }
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {

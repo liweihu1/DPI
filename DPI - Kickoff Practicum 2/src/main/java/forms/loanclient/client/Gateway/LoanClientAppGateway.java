@@ -1,6 +1,5 @@
 package forms.loanclient.client.Gateway;
 
-import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 import messaging.Gateway.MessageReceiverGateway;
 import messaging.Gateway.MessageSenderGateway;
 import mix.model.loan.LoanReply;
@@ -13,12 +12,11 @@ import javax.jms.Message;
 
 public class LoanClientAppGateway {
     private MessageSenderGateway sender;
-    private MessageReceiverGateway receiver;
     private LoanSerializer serializer;
 
-    public LoanClientAppGateway(){
+    protected LoanClientAppGateway(){
         sender = new MessageSenderGateway(Constants.LOAN_REQUEST, Constants.LOAN_REQUEST_QUEUE);
-        receiver = new MessageReceiverGateway(Constants.LOAN_REPLY, Constants.LOAN_REPLY_QUEUE);
+        MessageReceiverGateway receiver = new MessageReceiverGateway(Constants.LOAN_REPLY, Constants.LOAN_REPLY_QUEUE);
         serializer = new LoanSerializer();
 
         receiver.setListener(message -> {

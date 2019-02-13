@@ -5,14 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import forms.abnamro.bank.Gateway.BankClientAppGateway;
@@ -21,32 +14,11 @@ import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
 
 public class JMSBankFrame extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private JTextField tfReply;
-	private DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>> listModel = new DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>>();
+	private DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>> listModel = new DefaultListModel<>();
 
 	private BankClientAppGateway bankClientAppGateway;
-
-	private void initJMSBankFrame() {
-		bankClientAppGateway = new BankClientAppGateway(){
-			@Override
-			public void onBankInterestRequestArrived(BankInterestRequest request, String id) {
-				super.onBankInterestRequestArrived(request, id);
-				addRequestToList(request);
-			}
-		};
-	}
-
-	public void addRequestToList(BankInterestRequest request){
-	    RequestReply<BankInterestRequest, BankInterestReply> rr = new RequestReply(request, null);
-	    listModel.add(listModel.getSize(), rr);
-	    repaint();
-    }
 
 	/**
 	 * Launch the application.
@@ -65,11 +37,11 @@ public class JMSBankFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JMSBankFrame() {
+	private JMSBankFrame() {
 		setTitle("JMS Bank - ABN AMRO");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -88,7 +60,7 @@ public class JMSBankFrame extends JFrame {
 		gbc_scrollPane.gridy = 0;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
-		final JList<RequestReply<BankInterestRequest, BankInterestReply>> list = new JList<RequestReply<BankInterestRequest, BankInterestReply>>(listModel);
+		final JList<RequestReply<BankInterestRequest, BankInterestReply>> list = new JList<>(listModel);
 		scrollPane.setViewportView(list);
 		
 		JLabel lblNewLabel = new JLabel("type reply");
@@ -114,7 +86,7 @@ public class JMSBankFrame extends JFrame {
             RequestReply<BankInterestRequest, BankInterestReply> rr = list.getSelectedValue();
             if (rr != null){
                 double interest = Double.parseDouble((tfReply.getText()));
-                BankInterestReply reply = new BankInterestReply(rr.getRequest().getSsn(), interest,"ABN AMRO");
+                BankInterestReply reply = new BankInterestReply(interest,"ABN AMRO");
                 rr.setReply(reply);
                 list.repaint();
                 bankClientAppGateway.returnBankInterestReply(reply, String.valueOf(rr.getRequest().getId()));
@@ -126,6 +98,22 @@ public class JMSBankFrame extends JFrame {
 		gbc_btnSendReply.gridy = 1;
 		contentPane.add(btnSendReply, gbc_btnSendReply);
 
-		initJMSBankFrame();
+		initJMSBankFrameGateway();
+	}
+
+	private void initJMSBankFrameGateway() {
+		bankClientAppGateway = new BankClientAppGateway(){
+			@Override
+			public void onBankInterestRequestArrived(BankInterestRequest request, String id) {
+				super.onBankInterestRequestArrived(request, id);
+				addRequestToList(request);
+			}
+		};
+	}
+
+	private void addRequestToList(BankInterestRequest request){
+		RequestReply<BankInterestRequest, BankInterestReply> rr = new RequestReply<>(request, null);
+		listModel.add(listModel.getSize(), rr);
+		repaint();
 	}
 }

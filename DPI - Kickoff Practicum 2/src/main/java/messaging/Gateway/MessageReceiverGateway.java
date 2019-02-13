@@ -7,9 +7,6 @@ import javax.naming.NamingException;
 import java.util.Properties;
 
 public class MessageReceiverGateway {
-    private Connection connection;
-    private Session session;
-    private Destination receiveDestination;
     private MessageConsumer consumer;
 
     public MessageReceiverGateway(String channelName, String queueName){
@@ -22,9 +19,9 @@ public class MessageReceiverGateway {
             Context jndiContext = new InitialContext(props);
             ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup("ConnectionFactory");
 
-            connection = connectionFactory.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            receiveDestination = (Destination) jndiContext.lookup(channelName);
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Destination receiveDestination = (Destination) jndiContext.lookup(channelName);
 
             consumer = session.createConsumer(receiveDestination);
 

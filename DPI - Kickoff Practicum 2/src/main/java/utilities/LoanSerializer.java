@@ -8,7 +8,6 @@ import mix.model.loan.LoanRequest;
 import java.io.IOException;
 
 public class LoanSerializer {
-
     private ObjectMapper objectMapper;
 
     public LoanSerializer(){

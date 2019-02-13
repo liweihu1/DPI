@@ -13,13 +13,12 @@ import javax.jms.Message;
 
 public class LoanBrokerAppGateway {
     private MessageSenderGateway sender;
-    private MessageReceiverGateway loanRequestReceiver;
     private LoanSerializer loanSerializer;
     private BankInterestSerializer bankInterestSerializer;
 
-    public LoanBrokerAppGateway(){
+    protected LoanBrokerAppGateway(){
         sender = new MessageSenderGateway(Constants.BANK_INTEREST_REQUEST, Constants.BANK_INTEREST_REQUEST_QUEUE);
-        loanRequestReceiver = new MessageReceiverGateway(Constants.LOAN_REQUEST, Constants.LOAN_REQUEST_QUEUE);
+        MessageReceiverGateway loanRequestReceiver = new MessageReceiverGateway(Constants.LOAN_REQUEST, Constants.LOAN_REQUEST_QUEUE);
         loanSerializer = new LoanSerializer();
         bankInterestSerializer = new BankInterestSerializer();
 
@@ -39,7 +38,7 @@ public class LoanBrokerAppGateway {
         sendBankRequestToBank(bankInterestSerializer.loanRequestToBankInterestRequest(request), String.valueOf(request.getId()));
     }
 
-    public void sendBankRequestToBank(BankInterestRequest request, String id){
+    private void sendBankRequestToBank(BankInterestRequest request, String id){
         String jsonString = bankInterestSerializer.bankInterestRequestToString(request);
         Message message = sender.createMessageWithContent(Constants.BANK_INTEREST_REQUEST_JSON_STRING, jsonString, id, Constants.BANK_INTEREST_REQUEST);
         sender.send(message);
