@@ -149,40 +149,31 @@ public class LoanClientFrame extends JFrame {
 
 	public void addRequestToList(LoanRequest request){
 		this.listModel.add(listModel.getSize(), new RequestReply<>(request, null));
+		repaint();
 	}
 
 	public void updateRequestReplyWithRequestAndReply(LoanReply reply, String requestId){
-		//TODO UPDATE UI
+		getRequestReplyById(requestId).setReply(reply);
+		repaint();
 	}
 
 	/**
 	 * This method returns the RequestReply line that belongs to the request from requestReplyList (JList). 
 	 * You can call this method when an reply arrives in order to add this reply to the right request in requestReplyList.
-	 * @param request
+	 * @param id
 	 * @return
 	 */
-   private RequestReply<LoanRequest,LoanReply> getRequestReply(LoanRequest request){    
+   private RequestReply<LoanRequest,LoanReply> getRequestReplyById(String id){
      
      for (int i = 0; i < listModel.getSize(); i++){
     	 RequestReply<LoanRequest,LoanReply> rr =listModel.get(i);
-    	 if (rr.getRequest() == request){
+    	 if (rr.getRequest().getId().equals(UUID.fromString(id))){
     		 return rr;
     	 }
      }
      
      return null;
    }
-
-	private RequestReply<LoanRequest,LoanReply> getRequestReplyBySsn(int ssn){
-		for (int i = 0; i < listModel.getSize(); i++){
-			RequestReply<LoanRequest,LoanReply> rr =listModel.get(i);
-			if (rr.getRequest().getSsn() == ssn){
-				return rr;
-			}
-		}
-
-		return null;
-	}
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {

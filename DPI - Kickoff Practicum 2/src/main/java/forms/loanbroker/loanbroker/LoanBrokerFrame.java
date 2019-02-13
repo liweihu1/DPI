@@ -10,6 +10,7 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.UUID;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -62,7 +63,8 @@ public class LoanBrokerFrame extends JFrame {
     }
 
     public void updateLoanRequestWithIdReply(BankInterestReply reply, String id){
-		// TODO UPDATE UI
+		getRequestReplyById(id).setBankReply(reply);
+		repaint();
 	}
 
 	/**
@@ -96,19 +98,20 @@ public class LoanBrokerFrame extends JFrame {
 
 		initLoanBrokerFrame();
 	}
-	
-	 private JListLine getRequestReply(LoanRequest request){
-	     for (int i = 0; i < listModel.getSize(); i++){
-	    	 JListLine rr =listModel.get(i);
-	    	 if (rr.getLoanRequest() == request){
-	    		 return rr;
-	    	 }
-	     }
-	     
-	     return null;
+
+	private JListLine getRequestReplyById(String id){
+		for (int i = 0; i < listModel.getSize(); i++){
+			JListLine rr =listModel.get(i);
+			if (rr.getLoanRequest().getId().equals(UUID.fromString(id))){
+				return rr;
+			}
+		}
+
+		return null;
 	}
 	
 	public void addLoanRequestToList(LoanRequest loanRequest){
-		listModel.addElement(new JListLine(loanRequest));		
+		listModel.addElement(new JListLine(loanRequest));
+		repaint();
 	}
 }

@@ -51,6 +51,6 @@ public class BankInterestSerializer {
     }
 
     public BankInterestRequest loanRequestToBankInterestRequest(LoanRequest request){
-        return new BankInterestRequest(request.getSsn(), request.getAmount(), request.getTime());
+        return new BankInterestRequest(request.getId(), request.getSsn(), request.getAmount(), request.getTime());
     }
 }

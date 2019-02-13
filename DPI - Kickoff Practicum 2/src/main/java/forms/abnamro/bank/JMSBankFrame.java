@@ -45,6 +45,7 @@ public class JMSBankFrame extends JFrame {
 	public void addRequestToList(BankInterestRequest request){
 	    RequestReply<BankInterestRequest, BankInterestReply> rr = new RequestReply(request, null);
 	    listModel.add(listModel.getSize(), rr);
+	    repaint();
     }
 
 	/**

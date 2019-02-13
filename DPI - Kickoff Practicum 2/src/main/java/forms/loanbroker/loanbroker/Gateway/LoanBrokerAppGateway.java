@@ -10,7 +10,6 @@ import utilities.LoanSerializer;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageListener;
 
 public class LoanBrokerAppGateway {
     private MessageSenderGateway sender;
