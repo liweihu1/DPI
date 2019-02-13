@@ -1,5 +1,7 @@
 package forms.loanbroker.loanbroker;
 
+import forms.loanbroker.loanbroker.Gateway.BankBrokerAppGateway;
+import forms.loanbroker.loanbroker.Gateway.LoanBrokerAppGateway;
 import messaging.MessageBroker;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.bank.BankInterestReply;
@@ -26,7 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 
-public class LoanBrokerFrame extends JFrame implements MessageListener {
+public class LoanBrokerFrame extends JFrame {
 
 	/**
 	 * 
@@ -36,14 +38,8 @@ public class LoanBrokerFrame extends JFrame implements MessageListener {
 	private DefaultListModel<JListLine> listModel = new DefaultListModel<JListLine>();
 	private JList<JListLine> list;
 
-    private Connection connection;
-    private Session session;
-    private Destination loanRequestDestination;
-    private Destination bankInterestReplyDestination;
-    private MessageConsumer loanRequestConsumer;
-    private MessageConsumer bankInterestReplyConsumer;
-
-    private MessageBroker broker;
+	private LoanBrokerAppGateway loanBrokerAppGateway;
+	private BankBrokerAppGateway bankBrokerAppGateway;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -58,6 +54,21 @@ public class LoanBrokerFrame extends JFrame implements MessageListener {
 		});
 	}
 
+	public void initLoanBrokerFrame(){
+	    loanBrokerAppGateway = new LoanBrokerAppGateway(){
+			@Override
+			public void onLoanRequestArrived(LoanRequest request) {
+				super.onLoanRequestArrived(request);
+			}
+		};
+
+	    bankBrokerAppGateway = new BankBrokerAppGateway(){
+			@Override
+			public void onBankInterestReplyArrived(BankInterestReply reply) {
+				super.onBankInterestReplyArrived(reply);
+			}
+		};
+    }
 
 	/**
 	 * Create the frame.
@@ -87,35 +98,9 @@ public class LoanBrokerFrame extends JFrame implements MessageListener {
 		
 		list = new JList<JListLine>(listModel);
 		scrollPane.setViewportView(list);
-		initLoanBroker();
+
+		initLoanBrokerFrame();
 	}
-
-	private void initLoanBroker(){
-        try {
-            Properties props = new Properties();
-            props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
-            props.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
-            props.put((Constants.LOAN_REQUEST_QUEUE), Constants.LOAN_REQUEST);
-            props.put((Constants.BANK_INTEREST_REPLY_QUEUE), Constants.BANK_INTEREST_REPLY);
-            Context jndiContext = new InitialContext(props);
-            ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup("ConnectionFactory");
-            connection = connectionFactory.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-            loanRequestDestination = (Destination) jndiContext.lookup(Constants.LOAN_REQUEST);
-            bankInterestReplyDestination = (Destination) jndiContext.lookup(Constants.BANK_INTEREST_REPLY);
-
-            loanRequestConsumer = session.createConsumer(loanRequestDestination);
-            bankInterestReplyConsumer = session.createConsumer(bankInterestReplyDestination);
-
-            loanRequestConsumer.setMessageListener(this);
-            bankInterestReplyConsumer.setMessageListener(this);
-            broker = MessageBroker.getInstance();
-            connection.start();
-        } catch (NamingException | JMSException e) {
-            e.printStackTrace();
-        }
-    }
 	
 	 private JListLine getRequestReply(LoanRequest request){
 	     for (int i = 0; i < listModel.getSize(); i++){
@@ -127,17 +112,6 @@ public class LoanBrokerFrame extends JFrame implements MessageListener {
 	     
 	     return null;
 	}
-
-    private JListLine getRequestReplyBySsn(int ssn){
-        for (int i = 0; i < listModel.getSize(); i++){
-            JListLine rr =listModel.get(i);
-            if (rr.getLoanRequest().getSsn() == ssn){
-                return rr;
-            }
-        }
-
-        return null;
-    }
 	
 	public void add(LoanRequest loanRequest){		
 		listModel.addElement(new JListLine(loanRequest));		
@@ -159,37 +133,4 @@ public class LoanBrokerFrame extends JFrame implements MessageListener {
             list.repaint();
 		}		
 	}
-
-    @Override
-    public void onMessage(Message message) {
-        try {
-            if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REPLY)) {
-                int ssn = Integer.parseInt(message.getJMSCorrelationID());
-                String quoteId = message.getStringProperty(Constants.BANK_NAME);
-                double interest = message.getDoubleProperty(Constants.INTEREST);
-                LoanReply reply = new LoanReply();
-                reply.setQuoteID(quoteId);
-                reply.setInterest(interest);
-                reply.setSsn(ssn);
-                broker.sendMessage(new RequestReply(null, reply), Constants.LOAN_REPLY);
-
-                getRequestReplyBySsn(Integer.parseInt(message.getJMSCorrelationID())).setBankReply(new BankInterestReply(ssn, interest, quoteId));
-                list.repaint();
-            } else {
-                int ssn = message.getIntProperty(Constants.SSN);
-                int amount = message.getIntProperty(Constants.AMOUNT);
-                int time = message.getIntProperty(Constants.TIME);
-                add(new LoanRequest(ssn, amount, time));
-
-                BankInterestRequest request = new BankInterestRequest();
-                request.setSsn(ssn);
-                request.setAmount(amount);
-                request.setTime(time);
-                RequestReply requestReply = new RequestReply(request, null);
-                broker.sendMessage(requestReply, Constants.BANK_INTEREST_REQUEST);
-            }
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
-    }
 }

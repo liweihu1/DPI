@@ -4,14 +4,7 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Properties;
 
-import javax.jms.*;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,13 +15,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import messaging.MessageBroker;
+import forms.abnamro.bank.Gateway.BankClientAppGateway;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
-import utilities.Constants;
 
-public class JMSBankFrame extends JFrame implements MessageListener {
+public class JMSBankFrame extends JFrame {
 
 	/**
 	 * 
@@ -38,50 +30,35 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 	private JTextField tfReply;
 	private DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>> listModel = new DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>>();
 
-	private Connection connection;
-	private Session session;
-	private Destination receiveDestination;
-	private MessageConsumer consumer;
-
-	private MessageBroker broker;
+	private BankClientAppGateway bankClientAppGateway;
 
 	private void initJMSBankFrame() {
-		try {
-			Properties props = new Properties();
-			props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
-			props.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
-			props.put((Constants.BANK_INTEREST_REQUEST_QUEUE), Constants.BANK_INTEREST_REQUEST);
-			Context jndiContext = new InitialContext(props);
-			ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup("ConnectionFactory");
-			connection = connectionFactory.createConnection();
-			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-			receiveDestination = (Destination) jndiContext.lookup(Constants.BANK_INTEREST_REQUEST);
-			consumer = session.createConsumer(receiveDestination);
-			connection.start();
-
-			consumer.setMessageListener(this);
-
-			broker = MessageBroker.getInstance();
-		} catch (NamingException | JMSException e) {
-			e.printStackTrace();
-		}
+		bankClientAppGateway = new BankClientAppGateway(){
+			@Override
+			public void onBankInterestRequestArrived(BankInterestRequest request) {
+				super.onBankInterestRequestArrived(request);
+				addRequestToList(request);
+			}
+		};
 	}
+
+	public void addRequestToList(BankInterestRequest request){
+	    RequestReply<BankInterestRequest, BankInterestReply> rr = new RequestReply(request, null);
+	    listModel.add(listModel.getSize(), rr);
+    }
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JMSBankFrame frame = new JMSBankFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            try {
+                JMSBankFrame frame = new JMSBankFrame();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 	}
 
 	/**
@@ -110,7 +87,7 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 		gbc_scrollPane.gridy = 0;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
-		JList<RequestReply<BankInterestRequest, BankInterestReply>> list = new JList<RequestReply<BankInterestRequest, BankInterestReply>>(listModel);
+		final JList<RequestReply<BankInterestRequest, BankInterestReply>> list = new JList<RequestReply<BankInterestRequest, BankInterestReply>>(listModel);
 		scrollPane.setViewportView(list);
 		
 		JLabel lblNewLabel = new JLabel("type reply");
@@ -132,18 +109,16 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 		tfReply.setColumns(10);
 		
 		JButton btnSendReply = new JButton("send reply");
-		btnSendReply.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RequestReply<BankInterestRequest, BankInterestReply> rr = list.getSelectedValue();
-				double interest = Double.parseDouble((tfReply.getText()));
-				BankInterestReply reply = new BankInterestReply(rr.getRequest().getSsn(), interest,"ABN AMRO");
-				if (rr!= null && reply != null){
-					rr.setReply(reply);
-	                list.repaint();
-					broker.sendMessage(rr, Constants.BANK_INTEREST_REPLY);
-				}
-			}
-		});
+		btnSendReply.addActionListener(e -> {
+            RequestReply<BankInterestRequest, BankInterestReply> rr = list.getSelectedValue();
+            if (rr != null){
+                double interest = Double.parseDouble((tfReply.getText()));
+                BankInterestReply reply = new BankInterestReply(rr.getRequest().getSsn(), interest,"ABN AMRO");
+                rr.setReply(reply);
+                list.repaint();
+                bankClientAppGateway.returnBankInterestReply(rr.getRequest(), reply);
+            }
+        });
 		GridBagConstraints gbc_btnSendReply = new GridBagConstraints();
 		gbc_btnSendReply.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnSendReply.gridx = 4;
@@ -151,21 +126,5 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 		contentPane.add(btnSendReply, gbc_btnSendReply);
 
 		initJMSBankFrame();
-	}
-
-	@Override
-	public void onMessage(Message message) {
-		try {
-			if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REQUEST)) {
-				BankInterestRequest request = new BankInterestRequest();
-				request.setSsn(message.getIntProperty(Constants.SSN));
-				request.setAmount(message.getIntProperty(Constants.AMOUNT));
-				request.setTime(message.getIntProperty(Constants.TIME));
-				RequestReply requestReply = new RequestReply(request, null);
-				listModel.add(listModel.getSize(), requestReply);
-			}
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
 	}
 }

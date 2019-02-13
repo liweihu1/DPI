@@ -3,14 +3,7 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Properties;
 
-import javax.jms.*;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,14 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
-import messaging.MessageBroker;
+import forms.loanclient.client.Gateway.LoanClientAppGateway;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.loan.LoanReply;
 import mix.model.loan.LoanRequest;
-import utilities.Constants;
 
-public class LoanClientFrame extends JFrame implements MessageListener {
+public class LoanClientFrame extends JFrame {
 
 	/**
 	 * 
@@ -44,12 +35,7 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 	private JLabel lblNewLabel_1;
 	private JTextField tfTime;
 
-    private Connection connection;
-    private Session session;
-    private Destination receiveDestination;
-    private MessageConsumer consumer;
-
-    private MessageBroker broker;
+	private LoanClientAppGateway loanClientAppGateway;
 
 	/**
 	 * Create the frame.
@@ -121,18 +107,13 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 		tfTime.setColumns(10);
 		
 		JButton btnQueue = new JButton("send loan request");
-		btnQueue.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ssn = Integer.parseInt(tfSSN.getText());
-				int amount = Integer.parseInt(tfAmount.getText());
-				int time = Integer.parseInt(tfTime.getText());				
-				
-				LoanRequest request = new LoanRequest(ssn,amount,time);
-				if (getRequestReplyBySsn(ssn) == null){
-                    listModel.addElement( new RequestReply<LoanRequest,LoanReply>(request, null));
-                    broker.sendMessage(new RequestReply(request, null), Constants.LOAN_REQUEST);
-                }
-			}
+		btnQueue.addActionListener(arg0 -> {
+			int ssn = Integer.parseInt(tfSSN.getText());
+			int amount = Integer.parseInt(tfAmount.getText());
+			int time = Integer.parseInt(tfTime.getText());
+
+			LoanRequest request = new LoanRequest(ssn,amount,time);
+			loanClientAppGateway.applyForLoan(request);
 		});
 		GridBagConstraints gbc_btnQueue = new GridBagConstraints();
 		gbc_btnQueue.insets = new Insets(0, 0, 5, 5);
@@ -151,33 +132,22 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 		
 		requestReplyList = new JList<RequestReply<LoanRequest,LoanReply>>(listModel);
 		scrollPane.setViewportView(requestReplyList);
-
-        initLoanClient();
-       
+		initLoanBrokerGateway();
 	}
 
-	private void initLoanClient() {
-        try {
-            Properties props = new Properties();
-            props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
-            props.setProperty(Context.PROVIDER_URL, "tcp://localhost:61616");
-            props.put((Constants.LOAN_REPLY_QUEUE), Constants.LOAN_REPLY);
-            Context jndiContext = new InitialContext(props);
-            ConnectionFactory connectionFactory = (ConnectionFactory) jndiContext.lookup("ConnectionFactory");
-            connection = connectionFactory.createConnection();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+	public void initLoanBrokerGateway(){
+		loanClientAppGateway = new LoanClientAppGateway(){
+			@Override
+			public void onLoanReplyArrived(LoanRequest request, LoanReply reply) {
+				super.onLoanReplyArrived(request, reply);
+				updateRequestReplyWithRequestAndReply(request, reply);
+			}
+		};
+	}
 
-            receiveDestination = (Destination) jndiContext.lookup(Constants.LOAN_REPLY);
-            consumer = session.createConsumer(receiveDestination);
-            connection.start();
-
-            consumer.setMessageListener(this);
-
-            broker = MessageBroker.getInstance();
-        } catch (NamingException | JMSException e) {
-            e.printStackTrace();
-        }
-    }
+	public void updateRequestReplyWithRequestAndReply(LoanRequest request, LoanReply reply){
+		//TODO UPDATE UI
+	}
 
 	/**
 	 * This method returns the RequestReply line that belongs to the request from requestReplyList (JList). 
@@ -217,22 +187,5 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 				e.printStackTrace();
 			}
 		});
-	}
-
-
-
-	@Override
-	public void onMessage(Message message) {
-		try {
-			if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.LOAN_REPLY)) {
-				LoanReply reply = new LoanReply();
-				reply.setInterest(message.getDoubleProperty(Constants.INTEREST));
-				reply.setQuoteID(message.getStringProperty(Constants.BANK_NAME));
-				getRequestReplyBySsn(Integer.parseInt(message.getJMSCorrelationID())).setReply(reply);
-				requestReplyList.repaint();
-			}
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
 	}
 }
