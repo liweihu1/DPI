@@ -9,15 +9,27 @@ public class MessageSenderGateway {
     private Destination destination;
     private MessageProducer producer;
 
-    public void messageSenderGateway(String channelName){
+    public MessageSenderGateway(String channelName){
 
     }
 
-    public Message createTextMessage(String body){
-        return null;
+    public Message createMessageWithContent(String property, String propertyValue, String correlationId){
+        try {
+            Message message = session.createMessage();
+            message.setStringProperty(property, propertyValue);
+            message.setJMSCorrelationID(correlationId);
+            return message;
+        } catch (JMSException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void send(Message msg){
-
+        try {
+            producer.send(msg);
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
 }

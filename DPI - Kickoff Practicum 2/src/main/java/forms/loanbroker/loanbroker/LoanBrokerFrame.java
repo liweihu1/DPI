@@ -2,24 +2,15 @@ package forms.loanbroker.loanbroker;
 
 import forms.loanbroker.loanbroker.Gateway.BankBrokerAppGateway;
 import forms.loanbroker.loanbroker.Gateway.LoanBrokerAppGateway;
-import messaging.MessageBroker;
-import mix.messaging.requestreply.RequestReply;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
-import mix.model.loan.LoanReply;
 import mix.model.loan.LoanRequest;
-import utilities.Constants;
 
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Properties;
 
-import javax.jms.*;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -42,14 +33,12 @@ public class LoanBrokerFrame extends JFrame {
 	private BankBrokerAppGateway bankBrokerAppGateway;
 	
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoanBrokerFrame frame = new LoanBrokerFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				LoanBrokerFrame frame = new LoanBrokerFrame();
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -59,6 +48,7 @@ public class LoanBrokerFrame extends JFrame {
 			@Override
 			public void onLoanRequestArrived(LoanRequest request) {
 				super.onLoanRequestArrived(request);
+				addLoanRequestToList(request);
 			}
 		};
 
@@ -113,7 +103,7 @@ public class LoanBrokerFrame extends JFrame {
 	     return null;
 	}
 	
-	public void add(LoanRequest loanRequest){		
+	public void addLoanRequestToList(LoanRequest loanRequest){
 		listModel.addElement(new JListLine(loanRequest));		
 	}
 	

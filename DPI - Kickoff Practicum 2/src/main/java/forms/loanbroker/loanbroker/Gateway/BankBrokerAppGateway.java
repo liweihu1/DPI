@@ -12,17 +12,16 @@ public class BankBrokerAppGateway {
     private BankInterestSerializer bankInterestSerializer;
 
     public BankBrokerAppGateway(){
-        sender = new MessageSenderGateway();
+        sender = new MessageSenderGateway(Constants.LOAN_REPLY);
         bankInterestReceiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REPLY);
         bankInterestSerializer = new BankInterestSerializer();
 
         bankInterestReceiver.setListener(message -> {
-            BankInterestReply reply = bankInterestSerializer.messageToBankInterestReply(message);
-            onBankInterestReplyArrived(reply);
+
         });
     }
 
     public void onBankInterestReplyArrived(BankInterestReply reply) {
-        sender.send(bankInterestSerializer.bankInterestReplyToMessage(reply));
+
     }
 }

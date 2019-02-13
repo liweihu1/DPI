@@ -63,12 +63,12 @@ public final class MessageBroker {
                 message.setIntProperty(Constants.TIME, (((BankInterestRequest)rr.getRequest()).getTime()));
             } else if (destination.equals(Constants.BANK_INTEREST_REPLY)){
                 message.setStringProperty(Constants.REQUEST_TYPE, Constants.BANK_INTEREST_REPLY);
-                message.setJMSCorrelationID(String.valueOf((((BankInterestReply)rr.getReply()).getSsn())));
+//                message.setJMSCorrelationID(String.valueOf((((BankInterestReply)rr.getReply()).getSsn())));
                 message.setDoubleProperty(Constants.INTEREST, (((BankInterestReply)rr.getReply()).getInterest()));
                 message.setStringProperty(Constants.BANK_NAME, (((BankInterestReply)rr.getReply()).getQuoteId()));
             } else {
                 message.setStringProperty(Constants.REQUEST_TYPE, Constants.LOAN_REPLY);
-                message.setJMSCorrelationID(String.valueOf((((LoanReply)rr.getReply()).getSsn())));
+//                message.setJMSCorrelationID(String.valueOf((((LoanReply)rr.getReply()).getSsn())));
                 message.setDoubleProperty(Constants.INTEREST, (((LoanReply)rr.getReply()).getInterest()));
                 message.setStringProperty(Constants.BANK_NAME, (((LoanReply)rr.getReply()).getQuoteID()));
             }
