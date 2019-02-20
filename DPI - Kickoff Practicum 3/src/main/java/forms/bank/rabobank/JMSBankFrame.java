@@ -1,17 +1,13 @@
-package forms.abnamro.bank;
+package forms.bank.rabobank;
 
-import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import forms.abnamro.bank.Gateway.BankClientAppGateway;
+import forms.bank.rabobank.Gateway.BankClientAppGateway;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 public class JMSBankFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -38,7 +34,7 @@ public class JMSBankFrame extends JFrame {
 	 * Create the frame.
 	 */
 	private JMSBankFrame() {
-		setTitle("JMS Bank - ABN AMRO");
+		setTitle("JMS Bank - Rabo Bank");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		JPanel contentPane = new JPanel();
@@ -86,7 +82,7 @@ public class JMSBankFrame extends JFrame {
             RequestReply<BankInterestRequest, BankInterestReply> rr = list.getSelectedValue();
             if (rr != null){
                 double interest = Double.parseDouble((tfReply.getText()));
-                BankInterestReply reply = new BankInterestReply(interest,"ABN AMRO");
+                BankInterestReply reply = new BankInterestReply(interest,"RABOBANK");
                 rr.setReply(reply);
                 list.repaint();
                 bankClientAppGateway.returnBankInterestReply(reply, String.valueOf(rr.getRequest().getId()));

@@ -9,6 +9,7 @@ import utilities.LoanSerializer;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import java.util.UUID;
 
 public class LoanClientAppGateway {
     private MessageSenderGateway sender;
@@ -33,7 +34,7 @@ public class LoanClientAppGateway {
 
     public void applyForLoan(LoanRequest request){
         String jsonLoanRequest = serializer.loanRequestToJsonString(request);
-        Message message = sender.createMessageWithContent(Constants.LOAN_REQUEST_JSON_STRING, jsonLoanRequest, String.valueOf(request.getId()), Constants.LOAN_REQUEST);
+        Message message = sender.createMessageWithContent(Constants.LOAN_REQUEST_JSON_STRING, jsonLoanRequest, String.valueOf(request.getId()), Constants.LOAN_REQUEST, UUID.randomUUID().toString());
         sender.send(message);
     }
 

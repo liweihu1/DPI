@@ -12,13 +12,14 @@ import utilities.LoanSerializer;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import java.util.UUID;
 
 public class LoanBrokerAppGateway {
     private MessageSenderGateway sender;
     private LoanSerializer loanSerializer;
 
     protected LoanBrokerAppGateway(){
-        sender = new MessageSenderGateway(Constants.BANK_INTEREST_REQUEST, Constants.BANK_INTEREST_REQUEST_QUEUE);
+        sender = new MessageSenderGateway(Constants.LOAN_REPLY, Constants.LOAN_REPLY_QUEUE);
         MessageReceiverGateway loanRequestReceiver = new MessageReceiverGateway(Constants.LOAN_REQUEST, Constants.LOAN_REQUEST_QUEUE);
         loanSerializer = new LoanSerializer();
 
@@ -39,7 +40,7 @@ public class LoanBrokerAppGateway {
     }
 
     private void sendLoanReplyToLoanClient(LoanReply reply, String id){
-        Message message = sender.createMessageWithContent(Constants.LOAN_REPLY_JSON_STRING, loanSerializer.loanReplyToJsonString(reply), id, Constants.LOAN_REPLY);
+        Message message = sender.createMessageWithContent(Constants.LOAN_REPLY_JSON_STRING, loanSerializer.loanReplyToJsonString(reply), id, Constants.LOAN_REPLY, UUID.randomUUID().toString());
         sender.send(message);
     }
 

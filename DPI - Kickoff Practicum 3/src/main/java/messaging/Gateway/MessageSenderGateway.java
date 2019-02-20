@@ -36,11 +36,12 @@ public class MessageSenderGateway {
         }
     }
 
-    public Message createMessageWithContent(String property, String propertyValue, String correlationId, String type){
+    public Message createMessageWithContent(String property, String propertyValue, String correlationId, String type, String aggregationId){
         try {
             Message message = session.createMessage();
             message.setStringProperty(property, propertyValue);
             message.setStringProperty(Constants.REQUEST_TYPE, type);
+            message.setStringProperty(Constants.GROUP_ID, aggregationId);
             message.setJMSCorrelationID(correlationId);
             return message;
         } catch (JMSException e) {
