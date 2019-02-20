@@ -21,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 import messaging.MessageBroker;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.loan.LoanReply;
