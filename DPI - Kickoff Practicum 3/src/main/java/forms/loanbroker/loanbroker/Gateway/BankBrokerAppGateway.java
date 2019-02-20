@@ -3,7 +3,9 @@ package forms.loanbroker.loanbroker.Gateway;
 import messaging.Gateway.MessageReceiverGateway;
 import messaging.Gateway.MessageSenderGateway;
 import mix.model.bank.BankInterestReply;
+import mix.model.bank.BankInterestRequest;
 import mix.model.loan.LoanReply;
+import mix.model.loan.LoanRequest;
 import utilities.BankInterestSerializer;
 import utilities.Constants;
 import utilities.LoanSerializer;
@@ -14,14 +16,11 @@ import javax.jms.Message;
 public class BankBrokerAppGateway {
     private MessageSenderGateway sender;
     private BankInterestSerializer bankInterestSerializer;
-    private LoanSerializer loanSerializer;
 
     protected BankBrokerAppGateway(){
         sender = new MessageSenderGateway(Constants.LOAN_REPLY, Constants.LOAN_REPLY_QUEUE);
         MessageReceiverGateway bankInterestReceiver = new MessageReceiverGateway(Constants.BANK_INTEREST_REPLY, Constants.BANK_INTEREST_REPLY_QUEUE);
         bankInterestSerializer = new BankInterestSerializer();
-        loanSerializer = new LoanSerializer();
-
         bankInterestReceiver.setListener(message -> {
             try {
                 if (message.getStringProperty(Constants.REQUEST_TYPE).equals(Constants.BANK_INTEREST_REPLY)){
@@ -35,11 +34,16 @@ public class BankBrokerAppGateway {
     }
 
     public void onBankInterestReplyArrived(BankInterestReply reply, String id) {
-        sendLoanReplyToLoanClient(loanSerializer.bankInterestReplyToLoanReply(reply), id);
+        //
     }
 
-    private void sendLoanReplyToLoanClient(LoanReply reply, String id){
-        Message message = sender.createMessageWithContent(Constants.LOAN_REPLY_JSON_STRING, loanSerializer.loanReplyToJsonString(reply), id, Constants.LOAN_REPLY);
+    public void convertLoanRequestAndSend(LoanRequest request){
+        sendBankRequestToBank(bankInterestSerializer.loanRequestToBankInterestRequest(request), String.valueOf(request.getId()));
+    }
+
+    private void sendBankRequestToBank(BankInterestRequest request, String id){
+        String jsonString = bankInterestSerializer.bankInterestRequestToString(request);
+        Message message = sender.createMessageWithContent(Constants.BANK_INTEREST_REQUEST_JSON_STRING, jsonString, id, Constants.BANK_INTEREST_REQUEST);
         sender.send(message);
     }
 }

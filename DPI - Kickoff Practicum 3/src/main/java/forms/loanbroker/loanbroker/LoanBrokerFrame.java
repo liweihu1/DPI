@@ -19,6 +19,8 @@ import javax.swing.border.EmptyBorder;
 public class LoanBrokerFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
     private DefaultListModel<JListLine> listModel = new DefaultListModel<>();
+    private LoanBrokerAppGateway loanBrokerAppGateway;
+    private BankBrokerAppGateway bankBrokerAppGateway;
 
     public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
@@ -67,18 +69,20 @@ public class LoanBrokerFrame extends JFrame {
      * Creates the gateways.
      */
     private void initLoanBrokerGateways(){
-        new LoanBrokerAppGateway() {
+        loanBrokerAppGateway = new LoanBrokerAppGateway() {
             @Override
             public void onLoanRequestArrived(LoanRequest request) {
                 super.onLoanRequestArrived(request);
+                bankBrokerAppGateway.convertLoanRequestAndSend(request);
                 addLoanRequestToList(request);
             }
         };
 
-        new BankBrokerAppGateway() {
+        bankBrokerAppGateway = new BankBrokerAppGateway() {
             @Override
             public void onBankInterestReplyArrived(BankInterestReply reply, String id) {
                 super.onBankInterestReplyArrived(reply, id);
+                loanBrokerAppGateway.convertBankReplyAndSendReply(reply, id);
                 updateLoanRequestWithIdReply(reply, id);
             }
         };
